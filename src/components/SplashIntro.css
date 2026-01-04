@@ -1,0 +1,98 @@
+.splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0b0c;
+}
+
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    min-height: 200px;
+}
+
+/* Greetings */
+.splash-greeting {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 600;
+    color: #f8f8fc;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+/* Tagline */
+.splash-tagline {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 400;
+    color: #a8a8b8;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.tagline-accent {
+    color: #a855f7;
+}
+
+/* Name section */
+.splash-name-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.splash-name {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    color: #f8f8fc;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.splash-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: #6b6b7b;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* CTA Button */
+.splash-cta {
+    margin-top: 2.5rem;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f8f8fc;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.splash-cta:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.splash-cta:active {
+    transform: scale(0.98);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .splash-greeting,
+    .splash-tagline,
+    .splash-name-section,
+    .splash-cta {
+        animation: none;
+        transition: none;
+    }
+}

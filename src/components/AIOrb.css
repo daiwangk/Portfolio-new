@@ -1,0 +1,85 @@
+.ai-orb-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.ai-orb {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    will-change: transform;
+}
+
+/* Core orb */
+.ai-orb-core {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+    opacity: 0.6;
+    animation: orbPulse 4s ease-in-out infinite;
+}
+
+/* Outer glow */
+.ai-orb-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(124, 58, 237, 0.4) 0%,
+        rgba(6, 182, 212, 0.2) 40%,
+        transparent 70%
+    );
+    filter: blur(8px);
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* Pulse animations */
+@keyframes orbPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.08);
+        opacity: 0.75;
+    }
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.15);
+        opacity: 0.8;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .ai-orb-core,
+    .ai-orb-glow {
+        animation: none;
+    }
+    
+    .ai-orb {
+        display: none;
+    }
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+    .ai-orb-container {
+        display: none;
+    }
+}

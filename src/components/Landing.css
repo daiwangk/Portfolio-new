@@ -1,0 +1,155 @@
+.landing {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    overflow: hidden;
+}
+
+.landing-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.landing-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.6;
+    animation: landingFloat 8s ease-in-out infinite;
+}
+
+.orb-land-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+    top: -20%;
+    left: -10%;
+}
+
+.orb-land-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--accent-tertiary) 0%, transparent 70%);
+    bottom: -15%;
+    right: -10%;
+    animation-delay: -4s;
+}
+
+@keyframes landingFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(30px, -30px) scale(1.1);
+    }
+}
+
+.landing-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3xl);
+}
+
+.greeting-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 120px;
+    justify-content: center;
+}
+
+.greeting-text {
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 600;
+    font-family: 'Space Grotesk', var(--font-sans);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.greeting-lang {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+.greeting-progress {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 200px;
+}
+
+.progress-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-color-light);
+    transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+    background: var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.skip-btn {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    backdrop-filter: blur(10px);
+}
+
+.skip-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .landing-orb {
+        animation: none;
+    }
+    
+    .greeting-text {
+        text-shadow: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .greeting-wrapper {
+        min-height: 140px;
+    }
+    
+    .skip-btn {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
