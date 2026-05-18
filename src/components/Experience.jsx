@@ -5,25 +5,37 @@ const experiences = [
     {
         title: "AI/ML Intern",
         company: "Black Box Limited",
-        period: "Jul 2025 - Aug 2025",
-        description: "Built conversational retail assistant using Rasa + FastAPI. Integrated Llama 3.2 reducing manual support by ~30%. Fine-tuned Gemma-1B improving intent recognition from 74% → 82%.",
-        tags: ["Rasa", "FastAPI", "Llama 3.2", "Fine-tuning"],
+        period: "Jul 2025 – Aug 2025",
+        bullets: [
+            "Built a conversational retail assistant using Rasa and FastAPI for product discovery and order tracking",
+            "Integrated Llama 3.2 via Ollama for product summarization, reducing support queries by ~30%",
+            "Fine-tuned Gemma-1B with QLoRA, improving intent recognition accuracy from 74% to 82%",
+            "Designed prompt templates and coordinated demo-ready AI workflows with internal teams"
+        ],
+        tags: ["Rasa", "FastAPI", "Llama 3.2", "QLoRA", "Gemma-1B", "Ollama"],
         type: "ai"
     },
     {
         title: "Frontend Development Intern",
         company: "Medecro Technologies Pvt Ltd",
-        period: "Nov 2024 - Jan 2025",
-        description: "Developed scheduling and inventory dashboards improving operational visibility. Integrated backend data streams to surface insights and reduce coordination overhead.",
-        tags: ["React", "Dashboards", "Data Integration"],
+        period: "Nov 2024 – Jan 2025",
+        bullets: [
+            "Built scheduling and inventory dashboard components serving the internal operations team",
+            "Implemented responsive layouts and integrated REST APIs using Git-based workflows",
+            "Collaborated with cross-functional development teams via strict version control practices"
+        ],
+        tags: ["React", "REST APIs", "Git", "Dashboards"],
         type: "frontend"
     },
     {
         title: "Machine Learning Intern",
         company: "Z Plus Surveillance Security Pvt Ltd",
-        period: "Jun 2024 - Jul 2024",
-        description: "Built ML pipelines for surveillance processing ~300 frames/min with automated evaluation. Optimized inference improving real-time monitoring by ~15% via batch tuning and quantization.",
-        tags: ["OpenCV", "TensorFlow", "Optimization"],
+        period: "Jun 2024 – Jul 2024",
+        bullets: [
+            "Built motion detection pipeline using OpenCV with blur filtering for surveillance video feeds",
+            "Achieved ~45ms/frame latency using frame differencing and contour detection"
+        ],
+        tags: ["Python", "OpenCV", "Computer Vision"],
         type: "ml"
     }
 ]
@@ -90,7 +102,11 @@ function Experience() {
                                     </div>
                                     <span className="period">{exp.period}</span>
                                 </div>
-                                <p className="exp-description">{exp.description}</p>
+                                <ul className="exp-bullets">
+                                    {exp.bullets.map((bullet, i) => (
+                                        <li key={i}>{bullet}</li>
+                                    ))}
+                                </ul>
                                 <div className="exp-tags">
                                     {exp.tags.map((tag, i) => (
                                         <span key={i} className="tag">{tag}</span>

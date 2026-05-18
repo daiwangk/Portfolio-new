@@ -4,23 +4,34 @@ import './Projects.css'
 
 const projects = [
     {
-        title: "Retail AI Assistant",
+        title: "Legal & Financial Document Intelligence",
+        emoji: "⚖️",
+        problem: "Legal documents have complex clause hierarchies; standard RAG pipelines hallucinate and lose context across sections",
+        built: "Corrective RAG pipeline using LangGraph that grades retrieved chunks and rewrites queries automatically. Dual-LLM architecture: Llama 3.1-8B for grading + Llama 3.3-70B for generation. Deployed on Hugging Face Spaces.",
+        learned: "Hierarchical chunking with LlamaIndex, Pydantic v2 validation, Ragas evaluation framework, and optimizing latency vs accuracy trade-offs",
+        tags: ["LangGraph", "FastAPI", "ChromaDB", "Groq", "Streamlit", "LlamaIndex", "Ragas"],
+        gradient: "linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%)",
+        link: "#",
+        hasCase: false
+    },
+    {
+        title: "Clothing & Retail AI Assistant",
         emoji: "🛒",
         problem: "Customers needed conversational help for product discovery and order tracking during internal beta testing",
-        built: "AI chatbot using Rasa + FastAPI with Llama 3.2 via Ollama, reducing manual support responses by ~30% using summarization pipelines",
+        built: "AI chatbot using Rasa + FastAPI with Llama 3.2 via Ollama, reducing manual catalog lookups by ~25%. Deployed with Docker.",
         learned: "Conversational AI patterns, intent recognition fine-tuning (74% → 82% accuracy), and integrating LLMs with production APIs",
-        tags: ["Python", "Rasa", "FastAPI", "Llama 3.2", "Docker"],
+        tags: ["Python", "Rasa", "FastAPI", "Llama 3.2", "SQLite", "Docker"],
         gradient: "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)",
         link: "/projects/retail-ai",
         hasCase: true
     },
     {
-        title: "YouTube Shorts Automation",
+        title: "Automated YouTube Shorts Pipeline",
         emoji: "🎬",
         problem: "Creating YouTube Shorts manually is time-consuming and lacks consistency in content pipeline",
-        built: "End-to-end agentic workflow with Reddit ingestion, content filtering, Groq-hosted LLaMA 3.3 (70B) for narration, and automated uploads",
-        learned: "Agentic automation with n8n, working with large LLM APIs, content ranking algorithms, and video generation pipelines",
-        tags: ["n8n", "GenAI", "LLaMA 3.3", "Python", "APIs"],
+        built: "End-to-end workflow with Reddit ingestion, LLaMA 3.3 narration, video generation, and scheduled YouTube uploads. Automated metadata logging via Google Sheets.",
+        learned: "Agentic automation with n8n, content ranking algorithms, LLM narration pipelines, and video generation workflows",
+        tags: ["n8n", "Python", "Groq API", "LLaMA 3.3", "Google Sheets"],
         gradient: "linear-gradient(135deg, #f43f5e 0%, #fb7185 100%)",
         link: "#",
         hasCase: false
@@ -29,11 +40,44 @@ const projects = [
         title: "Real-Time Motion Detection",
         emoji: "📹",
         problem: "Surveillance systems needed faster processing with fewer false alerts for real-time monitoring",
-        built: "ML pipeline processing ~300 frames/min with blur thresholding and motion heuristics, maintaining ~45ms/frame latency",
-        learned: "Computer vision optimization, batch tuning, quantization techniques, and building low-latency inference systems",
-        tags: ["OpenCV", "TensorFlow", "Flask", "Python"],
+        built: "Surveillance pipeline using frame differencing and contour detection achieving ~45ms/frame latency with blur filtering",
+        learned: "OpenCV pipeline optimization, frame differencing techniques, and building low-latency inference systems",
+        tags: ["Python", "OpenCV", "Computer Vision"],
         gradient: "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
-        link: "#",
+        link: "https://github.com/daiwangk/Real-Time-Motion-Detection",
+        hasCase: false
+    },
+    {
+        title: "AI Document Assistant (RAG)",
+        emoji: "📄",
+        problem: "Users needed a way to query their own PDF and TXT documents with accurate, grounded answers — not hallucinations",
+        built: "Full-stack RAG web app: FastAPI backend, ChromaDB vector store, Sentence-Transformers (all-MiniLM-L6-v2) for local embeddings, and Google Gemini 2.5 for grounded answers. Dark-themed drag-and-drop UI.",
+        learned: "End-to-end RAG architecture, smart chunking with overlap, Dockerizing Python + FastAPI apps, and combining local embedding with cloud LLMs",
+        tags: ["Python", "FastAPI", "ChromaDB", "Google Gemini", "Sentence-Transformers", "Docker"],
+        gradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+        link: "https://github.com/daiwangk/AI-Assistant-RAG",
+        hasCase: false
+    },
+    {
+        title: "ElevenLabs Voice Agent",
+        emoji: "🎙️",
+        problem: "Manual debt collection is inefficient; agents needed autonomous outbound calling with smart scheduling and compliance guardrails",
+        built: "Multi-agent system with Hermes-style orchestration: Scheduler Agent (Apify holidays + timezone), Caller Agent (ElevenLabs voice AI), Learning Agent (closed-loop from call outcomes). WhatsApp fallback via Meta Cloud API.",
+        learned: "Hermes orchestration pattern, ElevenLabs Conversational AI integration, closed learning loops, tenacity retry patterns, and multi-agent tool design",
+        tags: ["Python", "FastAPI", "ElevenLabs", "Airtable", "Apify", "OpenRouter", "Pydantic"],
+        gradient: "linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)",
+        link: "https://github.com/daiwangk/11labsVoiceagent",
+        hasCase: false
+    },
+    {
+        title: "Team Task Manager",
+        emoji: "✅",
+        problem: "Teams needed a structured project management tool with role-based access, task tracking, and a visual Kanban workflow",
+        built: "Full-stack app with React + Vite frontend and Express.js + PostgreSQL (Prisma) backend. JWT auth, RBAC (Admin/Member roles), Kanban board, and deployed live on Railway.",
+        learned: "Full-stack architecture with monorepo setup, Prisma ORM, JWT session management, RBAC middleware design, and cloud deployment with Railway",
+        tags: ["React", "Express.js", "PostgreSQL", "Prisma", "JWT", "Railway"],
+        gradient: "linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)",
+        link: "https://github.com/daiwangk/team-task-manager",
         hasCase: false
     }
 ]
@@ -142,6 +186,17 @@ function Projects() {
                                     >
                                         View Case Study →
                                     </Link>
+                                )}
+                                {!project.hasCase && project.link !== '#' && (
+                                    <a
+                                        href={project.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="case-study-link"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        GitHub →
+                                    </a>
                                 )}
                             </div>
                         </motion.article>

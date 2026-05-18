@@ -12,9 +12,10 @@ const roles = [
 const techStack = [
     { name: "Python", icon: "🐍" },
     { name: "FastAPI", icon: "⚡" },
-    { name: "LLMs", icon: "🤖" },
+    { name: "LangGraph", icon: "🤖" },
     { name: "Docker", icon: "🐳" },
-    { name: "n8n", icon: "🔄" }
+    { name: "n8n", icon: "🔄" },
+    { name: "RAG", icon: "🔍" }
 ]
 
 function Hero() {
@@ -91,8 +92,8 @@ function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                 >
-                    B.Tech CS student passionate about conversational AI, backend systems,
-                    and building solutions that actually work.
+                    B.Tech CS student (CGPA 8.0) passionate about Corrective RAG, LLM pipelines,
+                    and building AI solutions that actually work.
                 </motion.p>
 
                 <motion.div
@@ -107,7 +108,7 @@ function Hero() {
                             <path d="M7 17L17 7M17 7H7M17 7V17" />
                         </svg>
                     </a>
-                    <a href="/resume.pdf" download className="btn btn-secondary">
+                    <a href="/resume_10_AI.pdf" download className="btn btn-secondary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                         </svg>

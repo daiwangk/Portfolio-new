@@ -3,22 +3,22 @@ import './Learning.css'
 
 const learningItems = [
     {
-        topic: "Advanced RAG & Vector DBs",
-        description: "Actively building + experimenting with retrieval-augmented generation and vector databases",
+        topic: "Corrective RAG & LangGraph",
+        description: "Building CRAG pipelines that auto-grade retrieved chunks and rewrite queries to eliminate hallucinations in production",
         icon: "🔍",
         status: "Building"
     },
     {
-        topic: "System Design for ML",
-        description: "Learning patterns for scalable microservices and production-ready AI pipelines",
-        icon: "⚙️",
-        status: "Exploring"
+        topic: "LLM Evaluation with Ragas",
+        description: "Using Ragas framework to systematically measure faithfulness, context recall, and answer relevance in RAG systems",
+        icon: "📊",
+        status: "Experimenting"
     },
     {
-        topic: "Agentic AI Workflows",
-        description: "Experimenting with autonomous agents, tool use, and multi-step reasoning with LLMs",
+        topic: "Agentic AI & Multi-step Reasoning",
+        description: "Designing autonomous agents with tool use, memory, and multi-step reasoning using LangChain and LangGraph",
         icon: "🤖",
-        status: "Experimenting"
+        status: "Exploring"
     }
 ]
 

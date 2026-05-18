@@ -115,10 +115,21 @@
     white-space: nowrap;
 }
 
-.exp-description {
-    font-size: 0.95rem;
-    line-height: 1.7;
+.exp-bullets {
+    font-size: 0.92rem;
+    line-height: 1.75;
     margin-bottom: var(--space-lg);
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+}
+
+.exp-bullets li {
+    margin-bottom: 0.35rem;
+    position: relative;
+}
+
+.exp-bullets li::marker {
+    color: var(--accent-primary);
 }
 
 .exp-tags {

@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import './About.css'
 
 const skills = [
-    { category: "Languages", items: ["Python", "JavaScript", "C", "C++"], icon: "💻" },
-    { category: "ML & GenAI", items: ["Transformers", "RAG", "LLM Fine-tuning", "PyTorch", "TensorFlow"], icon: "🤖" },
-    { category: "Backend", items: ["FastAPI", "Flask", "REST APIs", "Microservices"], icon: "⚙️" },
-    { category: "Databases", items: ["SQL", "SQLite", "MongoDB", "Vector DBs"], icon: "🗄️" },
-    { category: "Tools", items: ["Docker", "Git", "n8n", "Linux", "VS Code"], icon: "🔧" }
+    { category: "Programming", items: ["Python", "JavaScript", "SQL"], icon: "💻" },
+    { category: "AI / ML", items: ["RAG", "Corrective RAG (CRAG)", "Prompt Engineering", "LLM Integration", "QLoRA Fine-Tuning", "Embeddings", "LangGraph", "LangChain", "OpenCV"], icon: "🤖" },
+    { category: "Frameworks", items: ["FastAPI", "Flask", "Rasa", "Streamlit", "LlamaIndex", "LlamaParse", "ChromaDB"], icon: "⚡" },
+    { category: "Databases", items: ["SQLite", "ChromaDB (Vector DB)"], icon: "🗄️" },
+    { category: "DevOps & Tools", items: ["Docker", "Git", "Linux", "n8n", "Ragas", "Pydantic v2"], icon: "🔧" }
 ]
 
 const containerVariants = {
@@ -45,18 +45,18 @@ function About() {
                         <h2>About Me</h2>
                         <p className="about-intro">
                             I'm a B.Tech Computer Science student at Dronacharya College of Engineering,
-                            graduating in 2026. I'm passionate about building practical AI solutions
-                            and clean backend systems.
+                            Gurugram (CGPA: 8.0/10), graduating in 2026. I'm passionate about building
+                            practical AI solutions — from Corrective RAG pipelines to agentic workflows.
                         </p>
                         <p>
-                            From building conversational retail assistants to automating YouTube Shorts
-                            with LLMs, I love projects that solve real problems. I've worked with
-                            companies like Black Box Limited and Medecro Technologies as an intern.
+                            I've interned at Black Box Limited (AI/ML), Medecro Technologies (Frontend),
+                            and Z Plus Surveillance (ML). My flagship project is a Legal & Financial
+                            Document Intelligence system using LangGraph and CRAG, deployed on Hugging Face.
                         </p>
                         <p>
-                            When I'm not coding, I'm exploring new AI tools, contributing to automation
-                            workflows, or reading about system design. I believe every project is an
-                            opportunity to learn something new.
+                            When I'm not coding, I'm exploring new LLM tools, building automation
+                            workflows with n8n, or experimenting with agentic AI systems. I believe
+                            every project is an opportunity to learn something real.
                         </p>
                         <div className="about-stats">
                             <div className="stat">
@@ -64,12 +64,12 @@ function About() {
                                 <span className="stat-label">Internships</span>
                             </div>
                             <div className="stat">
-                                <span className="stat-number">AIR 18</span>
-                                <span className="stat-label">NCAT 2023</span>
+                                <span className="stat-number">8.0</span>
+                                <span className="stat-label">CGPA / 10</span>
                             </div>
                             <div className="stat">
-                                <span className="stat-number">∞</span>
-                                <span className="stat-label">Curiosity</span>
+                                <span className="stat-number">AIR 18</span>
+                                <span className="stat-label">NCAT 2023</span>
                             </div>
                         </div>
                     </motion.div>
