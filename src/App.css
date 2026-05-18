@@ -13,11 +13,13 @@
   height: 600px;
   background: radial-gradient(circle, #c9a84c08 0%, transparent 70%);
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
-main {
+.app-main {
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .footer {

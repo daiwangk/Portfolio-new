@@ -11,6 +11,7 @@ import About from './components/About'
 import Contact from './components/Contact'
 import RetailAICaseStudy from './pages/RetailAICaseStudy'
 import CustomCursor from './components/CustomCursor'
+import ParticleField from './components/ParticleField'
 import { flushPendingScroll } from './lenis'
 import './App.css'
 
@@ -45,9 +46,10 @@ function Layout({ children }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      <ParticleField />
       <div className="app-warmth" aria-hidden="true" />
       <Navbar />
-      <main>
+      <main className="app-main">
         {children}
       </main>
       <footer className="footer">
