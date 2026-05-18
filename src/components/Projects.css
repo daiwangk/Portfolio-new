@@ -159,3 +159,12 @@
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* Ensure the last row fills nicely with 7 cards (2 + 2 + 3 layout at desktop) */
+@media (min-width: 1024px) {
+    .project-card:last-child:nth-child(3n - 2) {
+        grid-column: 1 / -1;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+}
