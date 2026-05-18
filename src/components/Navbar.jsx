@@ -1,54 +1,78 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { lenis, scrollToSection } from '../lenis'
 import './Navbar.css'
+
+const links = [
+    { href: '#experience', label: 'Experience' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#learning', label: 'Learning' },
+    { href: '#about', label: 'About' },
+    { href: '#contact', label: 'Contact' },
+]
 
 function Navbar() {
     const [scrolled, setScrolled] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
+    const location = useLocation()
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 50)
+        const onScroll = (instance) => {
+            setScrolled(instance.scroll > 100)
         }
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
+        setScrolled(lenis.scroll > 100)
+        const unsubscribe = lenis.on('scroll', onScroll)
+        return unsubscribe
     }, [])
 
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? 'hidden' : ''
+        return () => {
+            document.body.style.overflow = ''
+        }
+    }, [mobileOpen])
+
+    const handleAnchorClick = (e, href) => {
+        setMobileOpen(false)
+
+        if (location.pathname !== '/') {
+            e.preventDefault()
+            scrollToSection(href, navigate)
+        }
+    }
+
     return (
-        <motion.nav
-            className={`navbar ${scrolled ? 'scrolled' : ''}`}
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-        >
-            <div className="container navbar-content">
-                <Link to="/" className="logo">
-                    <span className="logo-badge">DK</span>
-                    <span className="logo-name">Daiwang</span>
+        <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+            <div className="navbar-content">
+                <Link to="/" className="logo" onClick={() => setMobileOpen(false)}>
+                    DK
                 </Link>
 
                 <button
-                    className="mobile-toggle"
+                    type="button"
+                    className={`mobile-toggle ${mobileOpen ? 'open' : ''}`}
                     onClick={() => setMobileOpen(!mobileOpen)}
-                    aria-label="Toggle menu"
+                    aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={mobileOpen}
                 >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span />
+                    <span />
                 </button>
 
                 <div className={`nav-links ${mobileOpen ? 'open' : ''}`}>
-                    <a href="#experience" onClick={() => setMobileOpen(false)}>Experience</a>
-                    <a href="#projects" onClick={() => setMobileOpen(false)}>Projects</a>
-                    <a href="#learning" onClick={() => setMobileOpen(false)}>Learning</a>
-                    <a href="#about" onClick={() => setMobileOpen(false)}>About</a>
-                    <a href="#contact" className="btn btn-primary btn-nav" onClick={() => setMobileOpen(false)}>
-                        Let's Talk
-                    </a>
+                    {links.map(({ href, label }) => (
+                        <a
+                            key={href}
+                            href={href}
+                            onClick={(e) => handleAnchorClick(e, href)}
+                        >
+                            {label}
+                        </a>
+                    ))}
                 </div>
             </div>
-        </motion.nav>
+        </nav>
     )
 }
 

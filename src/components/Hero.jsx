@@ -1,173 +1,166 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useLayoutEffect, useCallback } from 'react'
+import gsap from 'gsap'
 import './Hero.css'
 
-const roles = [
-    "AI Solutions",
-    "Backend Systems",
-    "ML Pipelines",
-    "Automation Workflows"
-]
+const LINE1 = 'DAIWANG'
+const LINE2 = 'KHERA'
+const MARQUEE_TEXT =
+    'RAG PIPELINES · LANGGRAPH · FASTAPI · CORRECTIVE RAG · LLM INTEGRATION · CHROMADB · N8N AUTOMATION · OPEN TO WORK · '
+const MIN_FONT_PX = 48
+const MAX_FONT_PX = 280
 
-const techStack = [
-    { name: "Python", icon: "🐍" },
-    { name: "FastAPI", icon: "⚡" },
-    { name: "LangGraph", icon: "🤖" },
-    { name: "Docker", icon: "🐳" },
-    { name: "n8n", icon: "🔄" },
-    { name: "RAG", icon: "🔍" }
-]
+function splitChars(text) {
+    return [...text].map((char, i) => (
+        <span key={i} className="hero-char-wrap" aria-hidden="true">
+            <span className="hero-char">{char}</span>
+        </span>
+    ))
+}
+
+function fitNameLines(line1, line2, targetWidth) {
+    let low = MIN_FONT_PX
+    let high = MAX_FONT_PX
+
+    const applySize = (px) => {
+        const size = `${px}px`
+        line1.style.fontSize = size
+        line2.style.fontSize = size
+    }
+
+    while (high - low > 0.25) {
+        const mid = (low + high) / 2
+        applySize(mid)
+        const fits =
+            line1.scrollWidth <= targetWidth &&
+            line2.scrollWidth <= targetWidth
+        if (fits) low = mid
+        else high = mid
+    }
+
+    applySize(low)
+
+    while (
+        (line1.scrollWidth < targetWidth - 1 || line2.scrollWidth < targetWidth - 1) &&
+        low < MAX_FONT_PX
+    ) {
+        low += 0.25
+        applySize(low)
+        if (line1.scrollWidth > targetWidth || line2.scrollWidth > targetWidth) {
+            low -= 0.25
+            applySize(low)
+            break
+        }
+    }
+}
 
 function Hero() {
-    const [currentRole, setCurrentRole] = useState(0)
-    const [displayText, setDisplayText] = useState('')
-    const [isDeleting, setIsDeleting] = useState(false)
+    const heroRef = useRef(null)
+    const nameBlockRef = useRef(null)
+    const nameRef = useRef(null)
+    const line1Ref = useRef(null)
+    const line2Ref = useRef(null)
 
-    useEffect(() => {
-        const role = roles[currentRole]
-        const timeout = setTimeout(() => {
-            if (!isDeleting) {
-                if (displayText.length < role.length) {
-                    setDisplayText(role.slice(0, displayText.length + 1))
-                } else {
-                    setTimeout(() => setIsDeleting(true), 2000)
-                }
-            } else {
-                if (displayText.length > 0) {
-                    setDisplayText(displayText.slice(0, -1))
-                } else {
-                    setIsDeleting(false)
-                    setCurrentRole((prev) => (prev + 1) % roles.length)
-                }
+    const fitName = useCallback(() => {
+        const block = nameBlockRef.current
+        const line1 = line1Ref.current
+        const line2 = line2Ref.current
+        if (!block || !line1 || !line2) return
+
+        const targetWidth = block.clientWidth
+        fitNameLines(line1, line2, targetWidth)
+    }, [])
+
+    useLayoutEffect(() => {
+        let cancelled = false
+        let gsapCtx
+
+        const init = async () => {
+            if (document.fonts?.ready) {
+                await document.fonts.ready
             }
-        }, isDeleting ? 50 : 100)
+            if (cancelled) return
 
-        return () => clearTimeout(timeout)
-    }, [displayText, isDeleting, currentRole])
+            fitName()
+
+            gsapCtx = gsap.context(() => {
+                const nameChars = nameRef.current?.querySelectorAll('.hero-char')
+                if (nameChars?.length) {
+                    gsap.from(nameChars, {
+                        yPercent: 100,
+                        opacity: 0,
+                        duration: 0.7,
+                        stagger: 0.04,
+                        ease: 'power3.out',
+                    })
+                }
+            }, heroRef)
+        }
+
+        init()
+
+        const onResize = () => fitName()
+        window.addEventListener('resize', onResize)
+
+        return () => {
+            cancelled = true
+            window.removeEventListener('resize', onResize)
+            gsapCtx?.revert()
+        }
+    }, [fitName])
 
     return (
-        <section className="hero">
-            {/* Animated Background Orbs */}
-            <div className="hero-bg">
-                <div className="bg-orb orb-1"></div>
-                <div className="bg-orb orb-2"></div>
-                <div className="bg-orb orb-3"></div>
-                <div className="grid-overlay"></div>
-            </div>
+        <section className="hero" id="hero" ref={heroRef}>
+            <div className="hero-center">
+                <div className="hero-name-block" ref={nameBlockRef}>
+                    <h1 className="hero-name" ref={nameRef}>
+                        <span className="hero-line" ref={line1Ref} aria-label={LINE1}>
+                            {splitChars(LINE1)}
+                        </span>
+                        <span className="hero-name-rule" aria-hidden="true" />
+                        <span
+                            className="hero-line hero-line--outline"
+                            ref={line2Ref}
+                            aria-label={LINE2}
+                        >
+                            {splitChars(LINE2)}
+                        </span>
+                    </h1>
 
-
-
-            <div className="container hero-content">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="hero-badge"
-                >
-                    <span className="badge-dot"></span>
-                    Open to Work • 2026 Graduate
-                </motion.div>
-
-                <motion.h1
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                    Hi, I'm <span className="text-gradient">Daiwang Khera</span>
-                </motion.h1>
-
-                <motion.p
-                    className="hero-subtitle"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                    Building <span className="typing-text">{displayText}</span>
-                    <span className="cursor">|</span>
-                </motion.p>
-
-                <motion.p
-                    className="hero-description"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                    B.Tech CS student (CGPA 8.0) passionate about Corrective RAG, LLM pipelines,
-                    and building AI solutions that actually work.
-                </motion.p>
-
-                <motion.div
-                    className="hero-cta"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                    <a href="#projects" className="btn btn-primary">
-                        <span>See My Work</span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M7 17L17 7M17 7H7M17 7V17" />
-                        </svg>
-                    </a>
-                    <a href="/resume_10_AI.pdf" download className="btn btn-secondary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-                        </svg>
-                        <span>Resume</span>
-                    </a>
-                </motion.div>
-
-                {/* Social Links */}
-                <motion.div
-                    className="hero-socials"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                    <a href="https://github.com/daiwangk" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                        </svg>
-                    </a>
-                    <a href="https://linkedin.com/in/daiwang-khera-a66b5b25a" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                        </svg>
-                    </a>
-                    <a href="mailto:daiwangk@gmail.com" aria-label="Email">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                            <polyline points="22,6 12,13 2,6" />
-                        </svg>
-                    </a>
-                </motion.div>
-
-                {/* Tech Stack */}
-                <motion.div
-                    className="tech-stack"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                >
-                    <span className="tech-label">Working with:</span>
-                    <div className="tech-items">
-                        {techStack.map((tech, index) => (
-                            <motion.div
-                                key={index}
-                                className="tech-item"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
-                                whileHover={{ scale: 1.1, y: -3 }}
-                            >
-                                <span className="tech-icon">{tech.icon}</span>
-                                <span className="tech-name">{tech.name}</span>
-                            </motion.div>
-                        ))}
+                    <div className="hero-marquee" aria-hidden="true">
+                        <div className="hero-marquee-track">
+                            <span>{MARQUEE_TEXT}</span>
+                            <span>{MARQUEE_TEXT}</span>
+                        </div>
                     </div>
-                </motion.div>
 
+                    <div className="hero-meta">
+                        <p className="hero-meta-col hero-meta-col--left">
+                            AI · ML · Automation
+                        </p>
+                        <span className="hero-meta-divider" aria-hidden="true" />
+                        <p className="hero-meta-col hero-meta-col--right">
+                            Gurgaon · India · 2026
+                        </p>
+                    </div>
 
+                    <p className="hero-epigraph">
+                        — Building AI systems that ship, not just demo —
+                    </p>
+                </div>
             </div>
+
+            <footer className="hero-bottom">
+                <div className="hero-bottom-left">
+                    <a href="#projects" className="hero-cta">
+                        View my work →
+                    </a>
+                    <span className="hero-year">2026</span>
+                </div>
+                <span className="hero-bottom-line" aria-hidden="true" />
+                <a href="#experience" className="hero-scroll">
+                    <span className="hero-scroll-label">Scroll ↓</span>
+                </a>
+            </footer>
         </section>
     )
 }

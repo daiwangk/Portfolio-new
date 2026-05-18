@@ -5,7 +5,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-primary);
+    background: var(--color-bg);
     overflow: hidden;
 }
 
@@ -19,14 +19,14 @@
     position: absolute;
     border-radius: 50%;
     filter: blur(100px);
-    opacity: 0.6;
+    opacity: 0.4;
     animation: landingFloat 8s ease-in-out infinite;
 }
 
 .orb-land-1 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.2) 0%, transparent 70%);
     top: -20%;
     left: -10%;
 }
@@ -34,7 +34,7 @@
 .orb-land-2 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, var(--accent-tertiary) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
     bottom: -15%;
     right: -10%;
     animation-delay: -4s;
@@ -69,24 +69,16 @@
 }
 
 .greeting-text {
+    font-family: var(--font-display);
     font-size: clamp(2.5rem, 8vw, 5rem);
-    font-weight: 600;
-    font-family: 'Space Grotesk', var(--font-sans);
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    font-weight: 800;
+    color: var(--color-text);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.05;
 }
 
 .greeting-lang {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-weight: 500;
-    opacity: 0.7;
+    color: var(--color-text-muted);
 }
 
 .greeting-progress {
@@ -106,8 +98,8 @@
 }
 
 .progress-dot.active {
-    background: var(--accent-primary);
-    box-shadow: 0 0 10px var(--accent-glow);
+    background: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent-glow);
 }
 
 .skip-btn {
@@ -115,31 +107,27 @@
     bottom: 2rem;
     right: 2rem;
     padding: 0.75rem 1.5rem;
-    background: var(--bg-glass);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    background: transparent;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-full);
-    color: var(--text-muted);
-    font-size: 0.9rem;
+    color: var(--color-text-muted);
     font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-base);
-    backdrop-filter: blur(10px);
 }
 
 .skip-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--accent-primary);
-    color: var(--text-primary);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
     .landing-orb {
         animation: none;
-    }
-    
-    .greeting-text {
-        text-shadow: none;
     }
 }
 
@@ -147,7 +135,7 @@
     .greeting-wrapper {
         min-height: 140px;
     }
-    
+
     .skip-btn {
         bottom: 1.5rem;
         right: 1.5rem;

@@ -1,9 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import SplashIntro from './components/SplashIntro'
-import BackgroundParallax from './components/BackgroundParallax'
-import AIOrb from './components/AIOrb'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Experience from './components/Experience'
@@ -12,6 +10,8 @@ import Learning from './components/Learning'
 import About from './components/About'
 import Contact from './components/Contact'
 import RetailAICaseStudy from './pages/RetailAICaseStudy'
+import CustomCursor from './components/CustomCursor'
+import { flushPendingScroll } from './lenis'
 import './App.css'
 
 // Home page content
@@ -29,19 +29,23 @@ function HomePage() {
 }
 
 // Layout wrapper with common elements
-function Layout({ children, showSplash }) {
+function Layout({ children }) {
   const location = useLocation()
-  const isHome = location.pathname === '/'
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      flushPendingScroll()
+    }
+  }, [location.pathname])
 
   return (
     <motion.div
       className="app"
       initial={{ opacity: 0 }}
-      animate={{ opacity: showSplash && isHome ? 0 : 1 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <BackgroundParallax />
-      <AIOrb />
+      <div className="app-warmth" aria-hidden="true" />
       <Navbar />
       <main>
         {children}
@@ -65,11 +69,12 @@ function App() {
 
   return (
     <BrowserRouter>
+      <CustomCursor />
       {showSplash && (
         <SplashIntro onComplete={() => setShowSplash(false)} />
       )}
 
-      <Layout showSplash={showSplash}>
+      <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/projects/retail-ai" element={<RetailAICaseStudy />} />

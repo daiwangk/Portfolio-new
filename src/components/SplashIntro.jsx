@@ -1,140 +1,90 @@
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import './SplashIntro.css'
 
-const greetings = ["Hello", "Namaste", "नमस्कारः", "こんにちは", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "Bonjour", "Hola"]
+const GREETINGS = [
+    { word: 'HELLO', lang: 'English' },
+    { word: 'NAMASTE', lang: 'Hindi' },
+    { word: 'SAT SRI AKAL', lang: 'Punjabi' },
+    { word: 'BONJOUR', lang: 'French' },
+    { word: 'HOLA', lang: 'Spanish' },
+    { word: 'CIAO', lang: 'Italian' },
+    { word: 'SALVE', lang: 'Latin' },
+    { word: 'ΓΕΙΑ ΣΑΣ', lang: 'Greek' },
+    { word: 'مرحبا', lang: 'Arabic', rtl: true },
+    { word: 'こんにちは', lang: 'Japanese' },
+]
 
-// Check for reduced motion preference
-const prefersReducedMotion = () => 
+const WORD_MS = 280
+const EXIT_MS = 600
+
+const prefersReducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function SplashIntro({ onComplete }) {
-    const [phase, setPhase] = useState('greetings') // greetings | tagline | name | ready
-    const [greetingIndex, setGreetingIndex] = useState(0)
-    const [showButton, setShowButton] = useState(false)
+    const [index, setIndex] = useState(0)
+    const [exiting, setExiting] = useState(false)
 
-    const handleComplete = useCallback(() => {
+    const finish = useCallback(() => {
         sessionStorage.setItem('splashShown', 'true')
         onComplete()
     }, [onComplete])
 
-    // Skip animation if reduced motion is preferred
     useEffect(() => {
         if (prefersReducedMotion()) {
-            setPhase('ready')
-            setShowButton(true)
+            finish()
+            return
         }
-    }, [])
 
-    // Greetings sequence
+        let step = 0
+        const interval = setInterval(() => {
+            step += 1
+            if (step < GREETINGS.length) {
+                setIndex(step)
+            } else {
+                clearInterval(interval)
+                setExiting(true)
+            }
+        }, WORD_MS)
+
+        return () => clearInterval(interval)
+    }, [finish])
+
     useEffect(() => {
-        if (phase !== 'greetings') return
+        if (!exiting) return
 
-        if (greetingIndex < greetings.length - 1) {
-            const timer = setTimeout(() => {
-                setGreetingIndex(prev => prev + 1)
-            }, 400)
-            return () => clearTimeout(timer)
-        } else {
-            const timer = setTimeout(() => {
-                setPhase('tagline')
-            }, 500)
-            return () => clearTimeout(timer)
-        }
-    }, [phase, greetingIndex])
+        const timer = setTimeout(finish, EXIT_MS)
+        return () => clearTimeout(timer)
+    }, [exiting, finish])
 
-    // Tagline → Name transition
-    useEffect(() => {
-        if (phase === 'tagline') {
-            const timer = setTimeout(() => setPhase('name'), 1200)
-            return () => clearTimeout(timer)
+    const handleAnimationEnd = (e) => {
+        if (e.target !== e.currentTarget) return
+        if (e.animationName === 'splash-exit' && exiting) {
+            finish()
         }
-        if (phase === 'name') {
-            const timer = setTimeout(() => {
-                setPhase('ready')
-                setShowButton(true)
-            }, 1000)
-            return () => clearTimeout(timer)
-        }
-    }, [phase])
-
-    // Auto-navigate after button appears
-    useEffect(() => {
-        if (showButton) {
-            const timer = setTimeout(handleComplete, 3000)
-            return () => clearTimeout(timer)
-        }
-    }, [showButton, handleComplete])
-
-    const fadeVariants = {
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 },
-        exit: { opacity: 0 }
     }
 
+    if (prefersReducedMotion()) {
+        return null
+    }
+
+    const current = GREETINGS[index]
+
     return (
-        <div className="splash">
+        <div
+            className={`splash ${exiting ? 'splash--exit' : ''}`}
+            onAnimationEnd={handleAnimationEnd}
+            aria-hidden={exiting}
+            aria-live="polite"
+        >
             <div className="splash-content">
-                <AnimatePresence mode="wait">
-                    {phase === 'greetings' && (
-                        <motion.h1
-                            key={`greeting-${greetingIndex}`}
-                            className="splash-greeting"
-                            variants={fadeVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            transition={{ duration: 0.2 }}
-                        >
-                            {greetings[greetingIndex]}
-                        </motion.h1>
-                    )}
-
-                    {phase === 'tagline' && (
-                        <motion.p
-                            key="tagline"
-                            className="splash-tagline"
-                            variants={fadeVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            transition={{ duration: 0.3 }}
-                        >
-                            I build AI & backend systems<br />
-                            <span className="tagline-accent">while learning every day</span>
-                        </motion.p>
-                    )}
-
-                    {(phase === 'name' || phase === 'ready') && (
-                        <motion.div
-                            key="name"
-                            className="splash-name-section"
-                            variants={fadeVariants}
-                            initial="hidden"
-                            animate="visible"
-                            transition={{ duration: 0.4 }}
-                        >
-                            <h1 className="splash-name">Daiwang Khera</h1>
-                            <p className="splash-subtitle">
-                                AI / Backend Developer · 2026 Graduate
-                            </p>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                <AnimatePresence>
-                    {showButton && (
-                        <motion.button
-                            className="splash-cta"
-                            onClick={handleComplete}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: 0.2 }}
-                        >
-                            Enter Portfolio →
-                        </motion.button>
-                    )}
-                </AnimatePresence>
+                <h1
+                    className="splash-word"
+                    dir={current.rtl ? 'rtl' : 'ltr'}
+                    lang={current.lang.toLowerCase()}
+                >
+                    {current.word}
+                </h1>
+                <p className="splash-lang">{current.lang}</p>
             </div>
         </div>
     )
