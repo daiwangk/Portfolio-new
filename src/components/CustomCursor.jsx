@@ -2,22 +2,22 @@ import { useEffect, useRef } from 'react'
 import './CustomCursor.css'
 
 function CustomCursor() {
-    const dotRef = useRef(null)
+    const cursorRef = useRef(null)
 
     useEffect(() => {
         if (!window.matchMedia('(pointer: fine)').matches) return
 
-        const dot = dotRef.current
-        if (!dot) return
+        const cursor = cursorRef.current
+        if (!cursor) return
 
         const onMouseMove = (e) => {
-            dot.style.left = `${e.clientX}px`
-            dot.style.top = `${e.clientY}px`
+            cursor.style.left = `${e.clientX}px`
+            cursor.style.top = `${e.clientY}px`
         }
 
         const onMouseOver = (e) => {
             if (e.target.closest?.('a, button')) {
-                dot.classList.add('cursor-dot--hover')
+                cursor.classList.add('cursor-diamond--hover')
             }
         }
 
@@ -26,7 +26,7 @@ function CustomCursor() {
             if (!from) return
             const to = e.relatedTarget
             if (!to?.closest?.('a, button')) {
-                dot.classList.remove('cursor-dot--hover')
+                cursor.classList.remove('cursor-diamond--hover')
             }
         }
 
@@ -41,7 +41,7 @@ function CustomCursor() {
         }
     }, [])
 
-    return <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
+    return <div ref={cursorRef} className="cursor-diamond" aria-hidden="true" />
 }
 
 export default CustomCursor
