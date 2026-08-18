@@ -1,0 +1,47 @@
+Daiwang Khera
++91-9205331936 | daiwangk@gmail.com | Gurgaon, India | Portfolio | LinkedIn | GitHub
+Education
+Dronacharya College of Engineering Gurugram, Haryana
+B.Tech in Computer Science | CGPA: 8.0/10 Expected 2026
+Technical Skills
+Programming: Python, JavaScript, SQL
+AI/ML: RAG, Corrective RAG (CRAG), Prompt Engineering, LLM Integration (Groq, Ollama, LLaMA), QLoRA
+Fine-Tuning, Embeddings, LangGraph, LangChain, OpenCV
+F rameworks:FastAPI, Flask, Rasa, Streamlit, LlamaIndex, LlamaParse, ChromaDB
+Databases: SQLite, ChromaDB (Vector DB)
+DevOps & T ools: Docker, Git, Linux, n8n, Ragas, Pydantic v2
+Experience
+AI/ML Intern Jul 2025 – Aug 2025
+Black Box Limited
+– Built a conversational retail assistant using Rasa and FastAPI for product discovery and order tracking
+– Integrated Llama 3.2 via Ollama for product summarization, reducing support queries by ˜30%
+– Fine-tuned Gemma-1B with QLoRA, improving intent recognition accuracy from 74% to 82%
+– Designed prompt templates and coordinated demo-ready AI workflows with internal teams
+F rontend Development Intern Nov 2024 – Jan 2025
+Medecro Technologies Pvt Ltd
+– Built scheduling and inventory dashboard components serving the internal operations team
+– Implemented responsive layouts and integrated REST APIs using Git-based workflows
+– Collaborated with cross-functional development teams via strict version control practices
+Machine Learning Intern Jun 2024 – Jul 2024
+Z Plus Surveillance Security Pvt Ltd
+– Built motion detection pipeline using OpenCV with blur filtering for surveillance video feeds
+Projects
+Legal & Financial Document Intelligence | LangGraph, FastAPI, ChromaDB, Groq, Streamlit | Demo 2026
+– Engineered a Corrective RAG pipeline using LangGraph that grades retrieved chunks and rewrites queries automatically,
+eliminating hallucinations
+– Implemented hierarchical chunking via LlamaIndex, preserving clause-to-section context in legal documents
+– Designed dual-LLM architecture: Llama 3.1-8B for grading + Llama 3.3-70B for generation, optimizing latency and
+accuracy
+– Deployed full-stack app (FastAPI + Streamlit) with Pydantic v2 validation and Ragas evaluation on Hugging Face
+Spaces
+Clothing & Retail AI Assistant | Rasa, FastAPI, SQLite, Docker | GitHub Internship
+– Enabled product discovery, order tracking, and recommendations via conversational interface
+– Integrated Llama 3.2 summarization to reduce manual catalog lookups by ˜25%
+Real-Time Motion Detection | Python, OpenCV 2024
+– Built surveillance pipeline using frame differencing and contour detection at ˜45ms/frame latency
+Automated Y ouT ube Shorts Pipeline | n8n, Python, Groq API, LLaMA 3.3 Side Project
+– Built end-to-end workflow: Reddit ingestion, LLaMA 3.3 narration, video generation, and scheduled YouTube uploads
+– Automated metadata logging via Google Sheets and content ranking using n8n workflows
+Achievements & Certifications
+AIR 18 – NCAT 2023 | Finalist – Medecro HealthHack 2024 | NPTEL Python Programming
+Leadership: Led team during AI bootcamp project, coordinating solution design and presentation
