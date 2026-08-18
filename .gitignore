@@ -23,9 +23,15 @@ dist-ssr
 *.sln
 *.sw?
 
-.vercel
-
-# Next.js
+# Build artifacts
 .next
 out
 next-env.d.ts
+*.tsbuildinfo
+
+# Local / deploy
+.vercel
+.env*
+
+# Design handoff prototypes (not part of the app)
+extra/

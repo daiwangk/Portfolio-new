@@ -22,11 +22,6 @@ const SplashScreen = dynamic(() => import('@/components/ui/SplashScreen'), {
   loading: () => null,
 })
 
-const ScrollJourneyLine = dynamic(() => import('@/components/ui/ScrollJourneyLine'), {
-  ssr: false,
-  loading: () => null,
-})
-
 const CustomCursor = dynamic(() => import('@/components/ui/CustomCursor'), {
   ssr: false,
   loading: () => null,
@@ -60,9 +55,6 @@ export default function ClientOverlays() {
 
       {/* Fixed canvas overlays */}
       <GrainCanvas />
-
-      {/* Left scroll journey line */}
-      <ScrollJourneyLine />
 
       {/* Right section progress rail */}
       <SectionProgress />

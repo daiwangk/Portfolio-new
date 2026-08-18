@@ -84,6 +84,7 @@ export default function Marquee() {
 
   return (
     <div
+      id="marquee"
       className="relative border-y-2 border-ink/15 overflow-hidden bg-bg"
       aria-hidden="true"
     >

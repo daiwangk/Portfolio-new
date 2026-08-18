@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import CRAGBlueprint from '@/components/CRAGBlueprint'
 
 export const metadata: Metadata = {
-  title: 'Legal & Financial Document Intelligence — Case Study | Daiwang Khera',
+  title: 'Legal & Financial Document Intelligence — Case Study',
   description:
     'Production-grade Corrective RAG (CRAG) system for legal and financial document analysis. LangGraph state machine, ChromaDB, dual-LLM Groq architecture, Ragas evaluation. Deployed on Hugging Face Spaces.',
 }

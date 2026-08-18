@@ -41,11 +41,10 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="border-b-2 border-ink/15"
-      style={{ display: 'grid', gridTemplateColumns: 'minmax(0,5fr) minmax(0,7fr)' }}
+      className="border-b-2 border-ink/15 grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
     >
       {/* Left — About */}
-      <div className="px-[clamp(24px,5vw,72px)] py-20 border-r-2 border-ink/15">
+      <div className="px-[clamp(24px,5vw,72px)] py-20 lg:border-r-2 border-ink/15">
         <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-red-700 block mb-5">
           About
         </span>

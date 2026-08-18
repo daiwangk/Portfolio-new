@@ -35,6 +35,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Daiwang Khera', url: 'https://github.com/daiwangk' }],
   creator: 'Daiwang Khera',
+  alternates: {
+    canonical: 'https://daiwang-khera.vercel.app',
+  },
   openGraph: {
     title: 'Daiwang Khera — AI / ML Engineer',
     description:
@@ -91,6 +94,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <LenisProvider>
           {/* Client-only overlays */}
           <ClientOverlays />

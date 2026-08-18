@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import SystemBlueprint from '@/components/SystemBlueprint'
 
 export const metadata: Metadata = {
-  title: 'Clothing & Retail AI Assistant — Case Study | Daiwang Khera',
+  title: 'Clothing & Retail AI Assistant — Case Study',
   description:
     'Deep dive into building a conversational Rasa + FastAPI assistant with Llama 3.2 for product discovery and order tracking at Black Box Limited. Intent accuracy improved 74% → 82%.',
 }

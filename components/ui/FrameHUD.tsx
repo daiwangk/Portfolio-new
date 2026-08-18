@@ -13,13 +13,19 @@ export default function FrameHUD() {
   const accumRef = useRef({ fps: 0, count: 0, lastUpdate: performance.now() })
 
   useEffect(() => {
-    // One-time WebGL detection
     const canvas = document.createElement('canvas')
     if (canvas.getContext('webgl2')) setGlLabel('GL2')
     else if (canvas.getContext('webgl')) setGlLabel('GL1')
     else setGlLabel('NO GL')
 
+    let running = !document.hidden
+
     const tick = (now: number) => {
+      if (!running) {
+        rafRef.current = requestAnimationFrame(tick)
+        return
+      }
+
       const delta = now - lastTimeRef.current
       lastTimeRef.current = now
 
@@ -27,12 +33,9 @@ export default function FrameHUD() {
       acc.fps += 1000 / delta
       acc.count++
 
-      // Refresh every 600ms for readability
       if (now - acc.lastUpdate > 600) {
-        const avgFps = Math.round(acc.fps / acc.count)
-        const avgMs = parseFloat((delta).toFixed(1))
-        setFps(avgFps)
-        setMs(avgMs)
+        setFps(Math.round(acc.fps / acc.count))
+        setMs(parseFloat(delta.toFixed(1)))
         acc.fps = 0
         acc.count = 0
         acc.lastUpdate = now
@@ -41,17 +44,26 @@ export default function FrameHUD() {
       rafRef.current = requestAnimationFrame(tick)
     }
 
+    const onVisibility = () => {
+      running = !document.hidden
+      if (running) lastTimeRef.current = performance.now()
+    }
+
+    document.addEventListener('visibilitychange', onVisibility)
     rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
+
+    return () => {
+      cancelAnimationFrame(rafRef.current)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
   }, [])
 
-  // Color-code FPS: green ≥ 55, amber 30–54, red < 30
   const fpsColor =
     fps >= 55 ? 'text-emerald-600' : fps >= 30 ? 'text-amber-600' : 'text-red-600'
 
   return (
     <span
-      className={`font-mono text-[11px] tracking-[0.04em] select-none ${fpsColor}`}
+      className={`hidden sm:inline font-mono text-[11px] tracking-[0.04em] select-none ${fpsColor}`}
       title="Real-time frame budget — requestAnimationFrame delta"
       aria-hidden="true"
     >

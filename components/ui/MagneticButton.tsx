@@ -78,6 +78,7 @@ export default function MagneticButton({
         href={href}
         target={target}
         rel={rel}
+        onClick={onClick}
         className={baseClass}
         data-cursor={dataCursor}
       >
