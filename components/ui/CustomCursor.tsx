@@ -1,48 +1,17 @@
 'use client'
 
-import { useEffect, useRef, type CSSProperties } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
-type CursorLabel = '' | '[ VIEW ]' | '[ CASE STUDY ]' | '[ COPY ]' | '[ OPEN ]' | '[ PLAY ]'
-
-const SIZE_DEFAULT = 28
-
-const INTERACTIVE_SELECTOR = 'a, button, [data-cursor], [data-magnetic]'
-
-function getLabel(el: Element | null): CursorLabel {
-  if (!el) return ''
-  const root = el.closest('[data-cursor]') as HTMLElement | null
-  if (root) {
-    const v = root.dataset.cursor
-    if (v === 'view') return '[ VIEW ]'
-    if (v === 'case-study') return '[ CASE STUDY ]'
-    if (v === 'copy') return '[ COPY ]'
-    if (v === 'open') return '[ OPEN ]'
-    if (v === 'play') return '[ PLAY ]'
-  }
-  if (el.closest('a[href^="/projects"]')) return '[ CASE STUDY ]'
-  if (el.closest('a[href^="mailto"]')) return '[ COPY ]'
-  if (el.closest('a[href^="http"]')) return '[ OPEN ]'
-  return ''
-}
-
-const ringStyle: CSSProperties = {
-  width: SIZE_DEFAULT,
-  height: SIZE_DEFAULT,
-  borderRadius: '50%',
-  background: 'white',
-  mixBlendMode: 'difference',
-  transform: 'translate(-50%, -50%)',
-  willChange: 'transform, width, height',
-  opacity: 0,
-}
+const SIZE = 28
 
 export default function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
 
   useEffect(() => {
+    // Desktop pointer only
     const isTouch = window.matchMedia('(pointer: coarse)').matches
     if (isTouch || reduced) return
 
@@ -51,51 +20,21 @@ export default function CustomCursor() {
 
     document.documentElement.style.cursor = 'none'
 
-    let mouseX = -300
-    let mouseY = -300
-    let ringX = -300
-    let ringY = -300
+    let mx = -300, my = -300, rx = -300, ry = -300
     const LERP = 0.13
 
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
-    }
+    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY }
     window.addEventListener('mousemove', onMove)
 
     const tick = () => {
-      ringX += (mouseX - ringX) * LERP
-      ringY += (mouseY - ringY) * LERP
-      gsap.set(ring, { x: ringX, y: ringY })
+      rx += (mx - rx) * LERP
+      ry += (my - ry) * LERP
+      gsap.set(ring, { x: rx, y: ry })
     }
     gsap.ticker.add(tick)
 
-    let currentLabel: CursorLabel = ''
-
-    const onOver = (e: MouseEvent) => {
-      const interactive = (e.target as Element)?.closest(INTERACTIVE_SELECTOR)
-      if (!interactive) return
-
-      const nextLabel = getLabel(e.target as Element)
-      if (nextLabel === currentLabel) return
-      currentLabel = nextLabel
-    }
-
-    const onOut = (e: MouseEvent) => {
-      const interactive = (e.target as Element)?.closest(INTERACTIVE_SELECTOR)
-      if (!interactive) return
-
-      const related = e.relatedTarget
-      if (related && (related as Element).closest?.(INTERACTIVE_SELECTOR)) return
-
-      currentLabel = ''
-    }
-
-    document.addEventListener('mouseover', onOver)
-    document.addEventListener('mouseout', onOut)
-
     const onClick = () =>
-      gsap.fromTo(ring, { scale: 0.7 }, { scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.5)' })
+      gsap.fromTo(ring, { scale: 0.7 }, { scale: 1, duration: 0.3, ease: 'elastic.out(1,0.5)' })
     document.addEventListener('click', onClick)
 
     const show = () => gsap.to(ring, { opacity: 1, duration: 0.25 })
@@ -106,8 +45,6 @@ export default function CustomCursor() {
     return () => {
       document.documentElement.style.cursor = ''
       window.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseover', onOver)
-      document.removeEventListener('mouseout', onOut)
       document.removeEventListener('click', onClick)
       document.removeEventListener('mouseenter', show)
       document.removeEventListener('mouseleave', hide)
@@ -118,9 +55,18 @@ export default function CustomCursor() {
   return (
     <div
       ref={ringRef}
-      className="fixed top-0 left-0 z-[200] pointer-events-none flex items-center justify-center"
-      style={ringStyle}
       aria-hidden="true"
+      className="fixed top-0 left-0 pointer-events-none z-[200]"
+      style={{
+        width: SIZE,
+        height: SIZE,
+        borderRadius: '50%',
+        background: 'white',
+        mixBlendMode: 'difference',
+        transform: 'translate(-50%, -50%)',
+        willChange: 'transform',
+        opacity: 0,
+      }}
     />
   )
 }

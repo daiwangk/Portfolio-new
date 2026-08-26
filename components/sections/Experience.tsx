@@ -36,7 +36,7 @@ export default function Experience() {
     <section
       ref={sectionRef}
       id="experience"
-      className="px-[clamp(24px,5vw,72px)] py-20 border-b-2 border-ink/15"
+      className="px-[clamp(24px,5vw,72px)] py-16 border-b-2 border-ink/15"
     >
       {/* Header */}
       <Reveal mode="rise" className="mb-10 inline-block">
@@ -50,21 +50,22 @@ export default function Experience() {
           key={exp.title}
           data-exp-row
           data-skew
-          className="grid gap-x-12 gap-y-3 py-8 border-b-2 border-ink/15 last:border-b-0
-                     hover:bg-n100 transition-colors duration-300"
+          className="flex flex-col gap-3 py-7 border-b-2 border-ink/15 last:border-b-0
+                     hover:bg-n100 transition-colors duration-300
+                     md:grid md:gap-x-12 md:py-8"
           style={{
-            gridTemplateColumns: 'clamp(140px,16vw,200px) minmax(0,320px) minmax(0,1fr)',
             clipPath: 'inset(0 0 100% 0)',
+            gridTemplateColumns: 'clamp(140px,16vw,200px) minmax(0,320px) minmax(0,1fr)',
           }}
         >
           {/* Period */}
-          <span className="font-mono text-[12px] text-n600 tracking-[0.04em] pt-1">
+          <span className="font-mono text-[12px] text-n600 tracking-[0.04em]">
             {exp.period}
           </span>
 
           {/* Title + company */}
-          <div className="flex flex-col gap-2">
-            <h3 className="font-sans font-black text-[20px] leading-[1.2] m-0 tracking-[-0.01em]">
+          <div className="flex flex-col gap-1.5">
+            <h3 className="font-sans font-black text-[19px] leading-[1.2] m-0 tracking-[-0.01em]">
               {exp.title}
             </h3>
             <span className="font-mono text-[12px] text-n700 tracking-[0.04em]">
@@ -73,7 +74,7 @@ export default function Experience() {
           </div>
 
           {/* Bullets */}
-          <ul className="m-0 pl-4 flex flex-col gap-2 text-[14.5px] text-n800 max-w-[60ch] leading-relaxed">
+          <ul className="m-0 pl-4 flex flex-col gap-2 text-[14px] text-n800 max-w-[60ch] leading-relaxed">
             {exp.bullets.map((b) => (
               <li key={b}>{b}</li>
             ))}

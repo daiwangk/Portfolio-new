@@ -205,9 +205,11 @@ export default function Projects() {
           <div
             data-card-inner
             data-skew
-            className="relative grid gap-x-12 gap-y-3 py-9 border-b-2 border-ink/15
+            className="relative flex flex-col gap-4 py-7
+                       md:grid md:gap-x-12 md:gap-y-3 md:py-9
+                       border-b-2 border-ink/15
                        hover:bg-n100 transition-colors duration-300 cursor-default
-                       group"
+                       group px-[clamp(24px,5vw,72px)] md:px-0"
             style={{
               gridTemplateColumns: 'clamp(80px,8vw,120px) minmax(0,360px) minmax(0,1fr)',
               transformOrigin: 'top center',

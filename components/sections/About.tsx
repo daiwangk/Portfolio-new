@@ -41,7 +41,7 @@ export default function About() {
     <section
       ref={sectionRef}
       id="about"
-      className="border-b-2 border-ink/15 grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+      className="border-b-2 border-ink/15 grid grid-cols-1 lg:grid-cols-[5fr_7fr]"
     >
       {/* Left — About */}
       <div className="px-[clamp(24px,5vw,72px)] py-20 lg:border-r-2 border-ink/15">
@@ -99,7 +99,7 @@ export default function About() {
             <div
               key={skill.category}
               data-reveal
-              className="grid gap-6 py-4 border-t-2 border-ink/15 items-baseline opacity-0"
+              className="flex flex-col gap-1 sm:grid sm:gap-6 py-4 border-t-2 border-ink/15 items-baseline opacity-0"
               style={{ gridTemplateColumns: '140px 1fr' }}
             >
               <span className="font-sans font-bold text-[14.5px]">{skill.category}</span>
