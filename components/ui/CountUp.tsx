@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 interface CountUpProps {
   target: number
@@ -16,12 +17,13 @@ export default function CountUp({
   decimals = 0,
   prefix = '',
   suffix = '',
-  duration = 1400,
+  duration = 1800,
   className = '',
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
-  const [started, setStarted] = useState(false)
   const [value, setValue] = useState(0)
+  const [started, setStarted] = useState(false)
+  const reduced = useReducedMotion()
 
   useEffect(() => {
     const el = ref.current
@@ -30,24 +32,35 @@ export default function CountUp({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-        setStarted(true)
         observer.disconnect()
+        setStarted(true)
 
-        const startTime = performance.now()
-        const step = (now: number) => {
-          const p = Math.min(1, (now - startTime) / duration)
-          const eased = 1 - Math.pow(1 - p, 3) // ease-out cubic
-          setValue(target * eased)
-          if (p < 1) requestAnimationFrame(step)
-          else setValue(target)
+        if (reduced) {
+          setValue(target)
+          return
         }
-        requestAnimationFrame(step)
+
+        // Stagger start so multiple counters fire slightly offset
+        const delay = Math.random() * 120
+        setTimeout(() => {
+          const startTime = performance.now()
+          const step = (now: number) => {
+            const p = Math.min(1, (now - startTime) / duration)
+            // expo ease-out: feels snappy then settles
+            const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p)
+            setValue(+(target * eased).toFixed(decimals))
+            if (p < 1) requestAnimationFrame(step)
+            else setValue(target)
+          }
+          requestAnimationFrame(step)
+        }, delay)
       },
-      { threshold: 0.6 },
+      { threshold: 0.5 },
     )
+
     observer.observe(el)
     return () => observer.disconnect()
-  }, [target, decimals, duration, started])
+  }, [target, decimals, duration, started, reduced])
 
   return (
     <span ref={ref} className={className}>

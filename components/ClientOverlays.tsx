@@ -45,6 +45,11 @@ export const FrameHUDClient = dynamic(() => import('@/components/ui/FrameHUD'), 
   ),
 })
 
+export const LiveClockClient = dynamic(() => import('@/components/ui/LiveClock'), {
+  ssr: false,
+  loading: () => null,
+})
+
 export default function ClientOverlays() {
   return (
     <>

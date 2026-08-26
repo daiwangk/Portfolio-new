@@ -10,9 +10,10 @@ import { useReducedMotion } from '@/hooks/useReducedMotion'
 gsap.registerPlugin(ScrollTrigger)
 
 const STATS = [
-  { target: 3, decimals: 0, label: 'Internships' },
-  { target: 8.0, decimals: 1, label: 'CGPA / 10' },
-  { target: 18, decimals: 0, prefix: 'AIR ', label: 'NCAT 2023' },
+  { target: 3,   decimals: 0, suffix: '+',  label: 'Internships' },
+  { target: 8.0, decimals: 1, suffix: '',   label: 'CGPA / 10'   },
+  { target: 18,  decimals: 0, prefix: 'AIR ', suffix: '', label: 'NCAT 2023' },
+  { target: 6,   decimals: 0, suffix: '+',  label: 'AI projects' },
 ]
 
 export default function About() {
@@ -69,15 +70,17 @@ export default function About() {
         {/* Stats */}
         <div
           data-reveal
-          className="flex gap-12 mt-10 pt-7 border-t-2 border-ink/15 opacity-0"
+          className="flex flex-wrap gap-x-10 gap-y-8 mt-10 pt-7 border-t-2 border-ink/15 opacity-0"
         >
-          {STATS.map(({ target, decimals, prefix, label }) => (
-            <div key={label}>
+          {STATS.map(({ target, decimals, prefix, suffix, label }) => (
+            <div key={label} className="min-w-[80px]">
               <p className="font-sans font-black text-[44px] leading-none text-red m-0">
                 <CountUp
                   target={target}
                   decimals={decimals}
                   prefix={prefix}
+                  suffix={suffix}
+                  duration={1600}
                 />
               </p>
               <p className="font-mono text-[11px] tracking-[0.09em] uppercase text-n700 mt-2.5 m-0">

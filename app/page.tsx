@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic'
 import Navbar from '@/components/ui/Navbar'
 import Hero from '@/components/sections/Hero'
 import RedThread from '@/components/ui/RedThread'
-import { MarqueeClient, FrameHUDClient } from '@/components/ClientOverlays'
+import { MarqueeClient, FrameHUDClient, LiveClockClient } from '@/components/ClientOverlays'
 
 const Projects = dynamic(() => import('@/components/sections/Projects'))
 const Experience = dynamic(() => import('@/components/sections/Experience'))
@@ -38,7 +38,7 @@ export default function HomePage() {
         </span>
 
         <span className="font-mono text-[12px] text-n600 tracking-[0.04em] hidden sm:inline">
-          Last updated Aug 2026
+          <LiveClockClient />
         </span>
       </footer>
     </div>

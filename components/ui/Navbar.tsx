@@ -23,6 +23,7 @@ const NAV_LINKS = [
   { href: '#learning', label: 'Learning' },
   { href: '#about', label: 'About' },
   { href: '#contact', label: 'Contact' },
+  { href: '/uses', label: 'Uses' },
 ]
 
 export default function Navbar() {
