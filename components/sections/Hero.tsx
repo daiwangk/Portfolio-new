@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import gsap from 'gsap'
 import SplitType from 'split-type'
 import MagneticButton from '@/components/ui/MagneticButton'
+import CopyEmailButton from '@/components/ui/CopyEmailButton'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 export default function Hero() {
@@ -102,7 +103,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative min-h-[92vh] flex flex-col justify-center
+      className="hero-grid relative min-h-[92vh] flex flex-col justify-center
                  px-[clamp(24px,5vw,72px)] pt-28 pb-20
                  border-b-2 border-ink/15"
     >
@@ -152,9 +153,12 @@ export default function Hero() {
         <MagneticButton href="#projects" variant="primary">
           View projects →
         </MagneticButton>
-        <MagneticButton href="mailto:daiwangk@gmail.com" variant="ghost">
-          daiwangk@gmail.com
-        </MagneticButton>
+        <CopyEmailButton
+          label="daiwangk@gmail.com"
+          className="inline-flex items-center gap-2.5 px-5 py-3 font-sans font-bold
+                     text-[15px] border-2 border-ink text-ink hover:bg-ink/5
+                     transition-colors duration-150"
+        />
       </div>
 
       {/* Status row */}

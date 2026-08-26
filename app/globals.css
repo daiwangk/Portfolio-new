@@ -21,6 +21,41 @@
   top: 1rem;
 }
 
+/* ─── Theme tokens ───────────────────────────────────────────────────── */
+:root,
+[data-theme="light"] {
+  --color-bg:   #f3f2f2;
+  --color-ink:  #201e1d;
+  --color-n100: #edecec;
+  --color-n600: #7c7977;
+  --color-n700: #5f5c5a;
+  --color-n800: #403d3b;
+  --color-border: rgba(32, 30, 29, 0.15);
+  --grid-line:  rgba(32, 30, 29, 0.045);
+}
+
+[data-theme="dark"] {
+  --color-bg:   #141312;
+  --color-ink:  #f0efee;
+  --color-n100: #1e1c1b;
+  --color-n600: #8a8785;
+  --color-n700: #a8a5a3;
+  --color-n800: #cac7c5;
+  --color-border: rgba(240, 239, 238, 0.13);
+  --grid-line:  rgba(240, 239, 238, 0.045);
+}
+
+/* Smooth theme transitions */
+html {
+  color-scheme: light dark;
+}
+body,
+body * {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
 /* ─── Base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -31,16 +66,24 @@ html {
 }
 
 body {
-  background-color: #f3f2f2;
-  color: #201e1d;
+  background-color: var(--color-bg);
+  color: var(--color-ink);
   font-family: var(--font-archivo), Archivo, sans-serif;
   font-size: 16px;
   line-height: 1.65;
   text-wrap: pretty;
   margin: 0;
-  /* Prevent layout shift during font load */
   font-synthesis: none;
 }
+
+/* ─── Hero background grid ───────────────────────────────────────────── */
+.hero-grid {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
 
 /* ─── Focus ─────────────────────────────────────────────────────────── */
 :focus-visible {

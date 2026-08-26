@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import MagneticButton from '@/components/ui/MagneticButton'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 const AudioToggle = dynamic(() => import('@/components/ui/AudioToggle'), {
   ssr: false,
@@ -90,6 +91,8 @@ export default function Navbar() {
         </button>
 
         <AudioToggle />
+
+        <ThemeToggle />
 
         <MagneticButton
           href="/resume.pdf"
