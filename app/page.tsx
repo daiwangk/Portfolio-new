@@ -33,7 +33,9 @@ export default function HomePage() {
           © 2026 Daiwang Khera
         </span>
 
-        <FrameHUDClient />
+        <span className="hidden md:inline">
+          <FrameHUDClient />
+        </span>
 
         <span className="font-mono text-[12px] text-n600 tracking-[0.04em] hidden sm:inline">
           Last updated Aug 2026

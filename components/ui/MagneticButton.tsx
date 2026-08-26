@@ -36,7 +36,7 @@ export default function MagneticButton({
   const springY = useSpring(y, springConfig)
 
   const handleMove = (e: React.PointerEvent) => {
-    if (reduced || !ref.current) return
+    if (reduced || !ref.current || e.pointerType === 'touch') return
     const rect = ref.current.getBoundingClientRect()
     const dx = e.clientX - (rect.left + rect.width / 2)
     const dy = e.clientY - (rect.top + rect.height / 2)
@@ -44,12 +44,14 @@ export default function MagneticButton({
     y.set(dy * 0.22)
   }
 
-  const handleLeave = () => {
+  const handleLeave = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return
     x.set(0)
     y.set(0)
   }
 
-  const handleEnter = () => {
+  const handleEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === 'touch') return
     playSnap(0.06)
   }
 

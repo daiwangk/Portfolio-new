@@ -128,7 +128,7 @@ export default function Hero() {
       <h1
         ref={headingRef}
         className="font-sans font-black leading-[1.06] tracking-[-0.025em] m-0
-                   text-[clamp(52px,6.5vw,92px)] max-w-[14ch]"
+                   text-[clamp(36px,6.5vw,92px)] max-w-[14ch]"
         style={{ fontVariationSettings: "'wght' 800, 'wdth' 100" }}
       >
         Building AI systems that ship. <span className="text-red">Not just demos.</span>

@@ -79,7 +79,7 @@ export default function Contact() {
 
       <div
         data-contact-reveal
-        className="flex flex-wrap gap-3 mt-11"
+        className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-11"
         style={{ clipPath: 'inset(0 0 100% 0)' }}
       >
         {CONTACT_LINKS.map(({ href, label, external }) => (
@@ -89,6 +89,7 @@ export default function Contact() {
             target={external ? '_blank' : undefined}
             rel={external ? 'noopener noreferrer' : undefined}
             variant="ghost-on-red"
+            className="sm:w-auto justify-center"
           >
             {label}
           </MagneticButton>

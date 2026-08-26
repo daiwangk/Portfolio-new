@@ -80,7 +80,7 @@ export default function Navbar() {
 
         <button
           onClick={() => window.dispatchEvent(new CustomEvent('open-cmdpalette'))}
-          className="hidden md:flex items-center gap-1.5 font-mono text-[11px] tracking-[0.07em]
+          className="hidden lg:flex items-center gap-1.5 font-mono text-[11px] tracking-[0.07em]
                      text-n600 border border-ink/20 px-2.5 py-1.5 hover:border-ink/50
                      hover:text-ink transition-colors duration-200 select-none"
           title="Open command palette (Ctrl+K)"

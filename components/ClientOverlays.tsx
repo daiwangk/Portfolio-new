@@ -7,6 +7,7 @@ const GrainCanvas = dynamic(() => import('@/components/canvas/GrainCanvas'), {
   loading: () => null,
 })
 
+// Right progress rail — desktop only (hidden on mobile via CSS)
 const SectionProgress = dynamic(() => import('@/components/ui/SectionProgress'), {
   ssr: false,
   loading: () => null,
@@ -27,7 +28,7 @@ const CustomCursor = dynamic(() => import('@/components/ui/CustomCursor'), {
   loading: () => null,
 })
 
-// Named exports used directly in page.tsx (server component safe)
+// Named exports used directly in page.tsx
 export const MarqueeClient = dynamic(() => import('@/components/ui/Marquee'), {
   ssr: false,
   loading: () => (
@@ -50,14 +51,16 @@ export default function ClientOverlays() {
       {/* Entry splash — shown once per session */}
       <SplashScreen />
 
-      {/* Custom cursor — pointer devices only */}
+      {/* Custom cursor — pointer (desktop) only, component self-guards on touch */}
       <CustomCursor />
 
-      {/* Fixed canvas overlays */}
+      {/* GLSL grain overlay */}
       <GrainCanvas />
 
-      {/* Right section progress rail */}
-      <SectionProgress />
+      {/* Right section progress rail — hidden on mobile */}
+      <div className="hidden md:block">
+        <SectionProgress />
+      </div>
 
       {/* Global ⌘K command palette */}
       <CommandPalette />
