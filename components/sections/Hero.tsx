@@ -158,7 +158,7 @@ export default function Hero() {
         <CopyEmailButton
           label="daiwangk@gmail.com"
           className="inline-flex items-center gap-2.5 px-5 py-3 font-sans font-bold
-                     text-[15px] border-2 border-ink text-ink hover:bg-ink/5
+                     text-[15px] border-2 border-ink text-ink hover:bg-ink hover:text-bg
                      transition-colors duration-150"
         />
       </div>

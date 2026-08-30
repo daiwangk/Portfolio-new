@@ -49,13 +49,14 @@
   --grid-line:  rgba(240, 239, 238, 0.045);
 }
 
-/* Smooth theme transitions */
+/* Smooth theme transitions — background and border only.
+   Color is intentionally excluded: it fights hover:text-* utilities on buttons. */
 html {
   color-scheme: light dark;
 }
 body,
 body * {
-  transition-property: background-color, border-color, color;
+  transition-property: background-color, border-color;
   transition-duration: 0.25s;
   transition-timing-function: ease;
 }
