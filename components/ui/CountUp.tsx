@@ -29,6 +29,11 @@ export default function CountUp({
     const el = ref.current
     if (!el || started) return
 
+    // Hoist ids so the useEffect cleanup can cancel them even if
+    // the observer callback fires after the component unmounts.
+    let rafId = 0
+    let delayId: ReturnType<typeof setTimeout>
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
@@ -40,26 +45,32 @@ export default function CountUp({
           return
         }
 
-        // Stagger start so multiple counters fire slightly offset
         const delay = Math.random() * 120
-        setTimeout(() => {
+        delayId = setTimeout(() => {
           const startTime = performance.now()
           const step = (now: number) => {
             const p = Math.min(1, (now - startTime) / duration)
-            // expo ease-out: feels snappy then settles
             const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p)
             setValue(+(target * eased).toFixed(decimals))
-            if (p < 1) requestAnimationFrame(step)
-            else setValue(target)
+            if (p < 1) {
+              rafId = requestAnimationFrame(step)
+            } else {
+              setValue(target)
+            }
           }
-          requestAnimationFrame(step)
+          rafId = requestAnimationFrame(step)
         }, delay)
       },
       { threshold: 0.5 },
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(delayId)
+      cancelAnimationFrame(rafId)
+    }
   }, [target, decimals, duration, started, reduced])
 
   return (

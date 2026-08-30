@@ -101,12 +101,13 @@ body {
   background: rgba(236, 48, 19, 0.16);
 }
 
-/* ─── Links ─────────────────────────────────────────────────────────── */
-a {
+/* ─── Links — prose only, not Tailwind-controlled anchors ───────────────── */
+/* Using :where() keeps specificity at 0 so Tailwind utilities always win */
+:where(article, .prose, p) a {
   color: var(--color-red-700);
   text-decoration: none;
 }
-a:hover {
+:where(article, .prose, p) a:hover {
   color: var(--color-red);
 }
 
