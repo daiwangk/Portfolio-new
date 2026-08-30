@@ -9,16 +9,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#f3f2f2',
-        ink: '#201e1d',
+        bg: 'var(--color-bg)',
+        ink: 'var(--color-ink)',
         red: {
-          DEFAULT: '#ec3013',
-          700: '#b02510',
+          DEFAULT: 'var(--color-red)',
+          700: 'var(--color-red-700)',
         },
-        n100: '#edecec',
-        n600: '#7c7977',
-        n700: '#5f5c5a',
-        n800: '#403d3b',
+        n100: 'var(--color-n100)',
+        n600: 'var(--color-n600)',
+        n700: 'var(--color-n700)',
+        n800: 'var(--color-n800)',
       },
       fontFamily: {
         sans: ['var(--font-archivo)', 'Archivo', 'sans-serif'],

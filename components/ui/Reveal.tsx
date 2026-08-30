@@ -93,7 +93,17 @@ export default function Reveal({
 
   return (
     <div ref={wrapRef} className={className}>
-      <div ref={innerRef}>{children}</div>
+      <div
+        ref={innerRef}
+        data-gsap-reveal={mode === 'clip' && !reduced ? true : undefined}
+        style={
+          mode === 'clip' && !reduced
+            ? { clipPath: 'inset(0 0 100% 0)', opacity: 0 }
+            : undefined
+        }
+      >
+        {children}
+      </div>
     </div>
   )
 }

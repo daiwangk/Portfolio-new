@@ -77,7 +77,7 @@ export default function Marquee() {
       className="absolute inset-y-0 z-10 pointer-events-none w-24"
       style={{
         [dir === 'right' ? 'left' : 'right']: 0,
-        background: `linear-gradient(to ${dir}, #f3f2f2, transparent)`,
+        background: `linear-gradient(to ${dir}, var(--color-bg), transparent)`,
       }}
     />
   )

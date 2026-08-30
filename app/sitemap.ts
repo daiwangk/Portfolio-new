@@ -2,10 +2,16 @@ import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://daiwang-khera.vercel.app'
-  const lastModified = new Date('2026-08-19')
+  const lastModified = new Date()
 
   return [
     { url: base, lastModified, changeFrequency: 'weekly', priority: 1 },
+    {
+      url: `${base}/uses`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
     {
       url: `${base}/projects/legal-financial`,
       lastModified,

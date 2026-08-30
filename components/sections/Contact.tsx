@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import MagneticButton from '@/components/ui/MagneticButton'
-import Reveal from '@/components/ui/Reveal'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -57,6 +56,8 @@ export default function Contact() {
     )
   }, [reduced])
 
+  const clipHidden = reduced ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)'
+
   return (
     <section
       ref={sectionRef}
@@ -68,10 +69,10 @@ export default function Contact() {
           className="font-sans font-black text-bg leading-[1.06] tracking-[-0.018em] m-0
                      text-[clamp(40px,5vw,64px)]"
         >
-          <span data-line className="block" style={{ clipPath: 'inset(0 0 100% 0)' }}>
+          <span data-line className="block" style={{ clipPath: clipHidden }}>
             Open to work from May 2026.
           </span>
-          <span data-line className="block" style={{ clipPath: 'inset(0 0 100% 0)' }}>
+          <span data-line className="block" style={{ clipPath: clipHidden }}>
             Let&apos;s build something that ships.
           </span>
         </h2>
@@ -80,7 +81,7 @@ export default function Contact() {
       <div
         data-contact-reveal
         className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-11"
-        style={{ clipPath: 'inset(0 0 100% 0)' }}
+        style={{ clipPath: clipHidden }}
       >
         {CONTACT_LINKS.map(({ href, label, external }) => (
           <MagneticButton
@@ -99,7 +100,7 @@ export default function Contact() {
       <p
         data-contact-reveal
         className="font-mono text-[12px] tracking-[0.07em] uppercase text-bg/70 mt-9 m-0"
-        style={{ clipPath: 'inset(0 0 100% 0)' }}
+        style={{ clipPath: clipHidden }}
       >
         Based in Gurgaon, India · Open to remote
       </p>

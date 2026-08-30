@@ -1,15 +1,13 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Link from 'next/link'
 import gsap from 'gsap'
 import MagneticButton from '@/components/ui/MagneticButton'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 export default function NotFound() {
   const numRef = useRef<HTMLSpanElement>(null)
-  const reduced = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false
+  const reduced = useReducedMotion()
 
   useEffect(() => {
     const num = numRef.current
@@ -37,6 +35,8 @@ export default function NotFound() {
     <main className="min-h-screen bg-bg flex flex-col items-center justify-center
                      px-[clamp(24px,5vw,72px)] relative overflow-hidden">
 
+      <h1 className="sr-only">Page not found</h1>
+
       {/* Ghost background number */}
       <span
         aria-hidden="true"
@@ -51,12 +51,13 @@ export default function NotFound() {
       {/* Main 404 — variable font glitch */}
       <span
         ref={numRef}
+        data-not-found-reveal
         className="font-sans font-black leading-none text-ink select-none relative z-10"
         style={{
           fontSize: 'clamp(120px, 20vw, 220px)',
           letterSpacing: '-0.04em',
           fontVariationSettings: "'wght' 900, 'wdth' 120",
-          opacity: 0,
+          opacity: reduced ? 1 : 0,
         }}
         aria-hidden="true"
       >
@@ -65,7 +66,7 @@ export default function NotFound() {
 
       {/* Label */}
       <div className="relative z-10 text-center mt-8">
-        <p className="font-mono text-[12px] tracking-[0.12em] uppercase text-n600 mb-2">
+        <p className="font-mono text-[12px] tracking-[0.12em] uppercase text-n600 mb-2" aria-hidden="true">
           Page not found
         </p>
         <p className="text-[16px] text-n800 max-w-[42ch] leading-relaxed">

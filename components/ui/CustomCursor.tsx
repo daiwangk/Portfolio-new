@@ -1,29 +1,43 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
+import { updateCursorPosition } from '@/lib/cursorPosition'
+import { canUseCustomCursor } from '@/lib/cursorGuards'
 
 const SIZE = 28
 
 export default function CustomCursor() {
   const ringRef = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
+  const [eligible, setEligible] = useState(false)
 
   useEffect(() => {
-    // Desktop pointer only
-    const isTouch = window.matchMedia('(pointer: coarse)').matches
-    if (isTouch || reduced) return
+    const ok = canUseCustomCursor(reduced)
+    setEligible(ok)
+    if (!ok) document.documentElement.style.cursor = ''
+  }, [reduced])
+
+  useEffect(() => {
+    if (!eligible) return
 
     const ring = ringRef.current
     if (!ring) return
 
     document.documentElement.style.cursor = 'none'
 
-    let mx = -300, my = -300, rx = -300, ry = -300
+    let mx = -300
+    let my = -300
+    let rx = -300
+    let ry = -300
     const LERP = 0.13
 
-    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY }
+    const onMove = (e: MouseEvent) => {
+      mx = e.clientX
+      my = e.clientY
+      updateCursorPosition(mx, my)
+    }
     window.addEventListener('mousemove', onMove)
 
     const tick = () => {
@@ -34,7 +48,7 @@ export default function CustomCursor() {
     gsap.ticker.add(tick)
 
     const onClick = () =>
-      gsap.fromTo(ring, { scale: 0.7 }, { scale: 1, duration: 0.3, ease: 'elastic.out(1,0.5)' })
+      gsap.fromTo(ring, { scale: 0.7 }, { scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.5)' })
     document.addEventListener('click', onClick)
 
     const show = () => gsap.to(ring, { opacity: 1, duration: 0.25 })
@@ -50,7 +64,9 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', hide)
       gsap.ticker.remove(tick)
     }
-  }, [reduced])
+  }, [eligible])
+
+  if (!eligible) return null
 
   return (
     <div

@@ -217,11 +217,11 @@ export default function RedThread() {
       className="absolute inset-0 w-full h-full pointer-events-none z-[5] hidden lg:block"
       style={{ opacity: 0.85 }}
     >
-      <path ref={traceRef} fill="none" stroke="#ec3013" strokeWidth={2} opacity={0.11} />
+      <path ref={traceRef} fill="none" stroke="var(--color-red)" strokeWidth={2} opacity={0.11} />
       <path
         ref={lineRef}
         fill="none"
-        stroke="#ec3013"
+        stroke="var(--color-red)"
         strokeWidth={2.25}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -230,11 +230,11 @@ export default function RedThread() {
         ref={tipRingRef}
         r={7}
         fill="none"
-        stroke="#f3f2f2"
+        stroke="var(--color-bg)"
         strokeWidth={2}
         opacity={0.85}
       />
-      <circle ref={tipRef} r={4.5} fill="#ec3013" />
+      <circle ref={tipRef} r={4.5} fill="var(--color-red)" />
     </svg>
   )
 }

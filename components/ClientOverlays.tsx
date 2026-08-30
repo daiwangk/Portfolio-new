@@ -23,6 +23,11 @@ const SplashScreen = dynamic(() => import('@/components/ui/SplashScreen'), {
   loading: () => null,
 })
 
+const CursorCompanion = dynamic(() => import('@/components/ui/CursorCompanion'), {
+  ssr: false,
+  loading: () => null,
+})
+
 const CustomCursor = dynamic(() => import('@/components/ui/CustomCursor'), {
   ssr: false,
   loading: () => null,
@@ -58,6 +63,7 @@ export default function ClientOverlays() {
 
       {/* Custom cursor — pointer (desktop) only, component self-guards on touch */}
       <CustomCursor />
+      <CursorCompanion />
 
       {/* GLSL grain overlay */}
       <GrainCanvas />

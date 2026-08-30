@@ -38,6 +38,8 @@ export default function About() {
     })
   }, [reduced])
 
+  const revealHidden = reduced ? '' : 'opacity-0'
+
   return (
     <section
       ref={sectionRef}
@@ -52,15 +54,14 @@ export default function About() {
 
         <p
           data-reveal
-          className="m-0 font-sans font-black text-[25px] leading-[1.3] tracking-[-0.01em]
-                     opacity-0"
+          className={`m-0 font-sans font-black text-[25px] leading-[1.3] tracking-[-0.01em] ${revealHidden}`}
         >
           Every project is an opportunity to learn something real.
         </p>
 
         <p
           data-reveal
-          className="mt-5 text-[15px] text-n800 leading-relaxed opacity-0"
+          className={`mt-5 text-[15px] text-n800 leading-relaxed ${revealHidden}`}
         >
           B.Tech CS at Dronacharya College of Engineering, Gurugram — CGPA 8.0, graduating 2026.
           Three internships across AI/ML, frontend and computer vision. Flagship work: a Legal &amp;
@@ -70,7 +71,7 @@ export default function About() {
         {/* Stats */}
         <div
           data-reveal
-          className="flex flex-wrap gap-x-10 gap-y-8 mt-10 pt-7 border-t-2 border-ink/15 opacity-0"
+          className={`flex flex-wrap gap-x-10 gap-y-8 mt-10 pt-7 border-t-2 border-ink/15 ${revealHidden}`}
         >
           {STATS.map(({ target, decimals, prefix, suffix, label }) => (
             <div key={label} className="min-w-[80px]">
@@ -102,7 +103,7 @@ export default function About() {
             <div
               key={skill.category}
               data-reveal
-              className="flex flex-col gap-1 sm:grid sm:gap-6 py-4 border-t-2 border-ink/15 items-baseline opacity-0"
+              className={`flex flex-col gap-1 sm:grid sm:gap-6 py-4 border-t-2 border-ink/15 items-baseline ${revealHidden}`}
               style={{ gridTemplateColumns: '140px 1fr' }}
             >
               <span className="font-sans font-bold text-[14.5px]">{skill.category}</span>

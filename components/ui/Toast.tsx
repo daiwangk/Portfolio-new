@@ -31,8 +31,7 @@ export default function Toast({ message, visible }: ToastProps) {
       style={{ transform: 'translateX(-50%)', opacity: 0 }}
     >
       <span className="font-mono text-[12px] tracking-[0.1em] uppercase
-                       bg-ink text-bg px-4 py-2.5 border-2 border-ink
-                       dark:bg-bg dark:text-ink">
+                       bg-ink text-bg px-4 py-2.5 border-2 border-ink">
         {message}
       </span>
     </div>

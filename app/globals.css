@@ -9,8 +9,8 @@
   top: 0;
   z-index: 200;
   padding: 0.75rem 1.25rem;
-  background: #201e1d;
-  color: #f3f2f2;
+  background: var(--color-ink);
+  color: var(--color-bg);
   font-family: var(--font-mono), monospace;
   font-size: 13px;
   letter-spacing: 0.06em;
@@ -30,6 +30,8 @@
   --color-n600: #7c7977;
   --color-n700: #5f5c5a;
   --color-n800: #403d3b;
+  --color-red:  #ec3013;
+  --color-red-700: #b02510;
   --color-border: rgba(32, 30, 29, 0.15);
   --grid-line:  rgba(32, 30, 29, 0.045);
 }
@@ -41,6 +43,8 @@
   --color-n600: #8a8785;
   --color-n700: #a8a5a3;
   --color-n800: #cac7c5;
+  --color-red:  #ec3013;
+  --color-red-700: #b02510;
   --color-border: rgba(240, 239, 238, 0.13);
   --grid-line:  rgba(240, 239, 238, 0.045);
 }
@@ -87,7 +91,7 @@ body {
 
 /* ─── Focus ─────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #ec3013;
+  outline: 2px solid var(--color-red);
   outline-offset: 3px;
 }
 
@@ -98,11 +102,11 @@ body {
 
 /* ─── Links ─────────────────────────────────────────────────────────── */
 a {
-  color: #b02510;
+  color: var(--color-red-700);
   text-decoration: none;
 }
 a:hover {
-  color: #ec3013;
+  color: var(--color-red);
 }
 
 /* ─── Variable font smoothing ────────────────────────────────────────── */
@@ -113,7 +117,7 @@ a:hover {
 
 /* ─── Navbar scrolled state ──────────────────────────────────────────── */
 .nav-scrolled {
-  border-bottom-color: rgba(32, 30, 29, 0.12) !important;
+  border-bottom-color: var(--color-border) !important;
 }
 
 /* ─── View Transition Animations ────────────────────────────────────── */
@@ -180,6 +184,19 @@ a:hover {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none !important;
+  }
+
+  /* Safety net: force GSAP reveal targets visible if JS skips animations */
+  [data-hero-reveal],
+  [data-reveal],
+  [data-contact-reveal],
+  [data-exp-row],
+  [data-line],
+  [data-not-found-reveal],
+  [data-gsap-reveal] {
+    opacity: 1 !important;
+    clip-path: inset(0 0 0% 0) !important;
+    transform: none !important;
   }
 }
 

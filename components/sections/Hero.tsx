@@ -99,6 +99,8 @@ export default function Hero() {
     }
   }, [reduced, handleMouseMove, proximityLoop])
 
+  const revealHidden = reduced ? '' : 'opacity-0'
+
   return (
     <section
       ref={sectionRef}
@@ -120,7 +122,7 @@ export default function Hero() {
       {/* Kicker */}
       <span
         data-hero-reveal
-        className="font-mono text-[12px] tracking-[0.1em] uppercase text-red-700 mb-6 opacity-0"
+        className={`font-mono text-[12px] tracking-[0.1em] uppercase text-red-700 mb-6 ${revealHidden}`}
       >
         AI · Backend · Automation — Gurgaon, India
       </span>
@@ -138,7 +140,7 @@ export default function Hero() {
       {/* Description */}
       <p
         data-hero-reveal
-        className="mt-9 max-w-[52ch] text-[17px] text-n800 leading-relaxed opacity-0"
+        className={`mt-9 max-w-[52ch] text-[17px] text-n800 leading-relaxed ${revealHidden}`}
       >
         B.Tech Computer Science &apos;26, Dronacharya College of Engineering. I build corrective-RAG
         pipelines, conversational assistants and agentic workflows — and the FastAPI backends that
@@ -148,7 +150,7 @@ export default function Hero() {
       {/* CTA row */}
       <div
         data-hero-reveal
-        className="flex flex-wrap gap-3 mt-9 opacity-0"
+        className={`flex flex-wrap gap-3 mt-9 ${revealHidden}`}
       >
         <MagneticButton href="#projects" variant="primary">
           View projects →
@@ -164,7 +166,7 @@ export default function Hero() {
       {/* Status row */}
       <div
         data-hero-reveal
-        className="flex flex-wrap items-center gap-x-8 gap-y-3 mt-12 pt-8 border-t-2 border-ink/15 opacity-0"
+        className={`flex flex-wrap items-center gap-x-8 gap-y-3 mt-12 pt-8 border-t-2 border-ink/15 ${revealHidden}`}
       >
         <span className="flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 bg-red animate-blink rounded-none" />

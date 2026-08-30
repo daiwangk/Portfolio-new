@@ -32,6 +32,8 @@ export default function Experience() {
     })
   }, [reduced])
 
+  const clipHidden = reduced ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)'
+
   return (
     <section
       ref={sectionRef}
@@ -40,7 +42,7 @@ export default function Experience() {
     >
       {/* Header */}
       <Reveal mode="rise" className="mb-10 inline-block">
-        <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-red-700 block">
+        <span className="font-mono text-[12px] sm:text-[13px] md:text-sm tracking-[0.1em] uppercase text-red font-medium block">
           Work experience
         </span>
       </Reveal>
@@ -54,7 +56,7 @@ export default function Experience() {
                      hover:bg-n100 transition-colors duration-300
                      md:grid md:gap-x-12 md:py-8"
           style={{
-            clipPath: 'inset(0 0 100% 0)',
+            clipPath: clipHidden,
             gridTemplateColumns: 'clamp(140px,16vw,200px) minmax(0,320px) minmax(0,1fr)',
           }}
         >

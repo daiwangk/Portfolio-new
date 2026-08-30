@@ -186,10 +186,10 @@ export default function Projects() {
 
       {/* Section header */}
       <div className="flex items-baseline gap-6 mb-4">
-        <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-red-700">
+        <span className="font-mono text-[12px] sm:text-[13px] md:text-sm tracking-[0.1em] uppercase text-red font-medium">
           Selected projects
         </span>
-        <span className="font-mono text-[11px] text-n600 tracking-[0.06em]">
+        <span className="font-mono text-[12px] sm:text-[13px] md:text-sm text-n800 tracking-[0.06em]">
           — things built while learning
         </span>
       </div>

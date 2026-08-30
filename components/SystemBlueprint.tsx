@@ -96,13 +96,13 @@ export default function SystemBlueprint() {
         aria-label="System architecture diagram showing data flow from User through Rasa NLU to FastAPI and Llama 3.2"
       >
         {/* Paths (drawn via scrollTrigger scrub) */}
-        {PATHS.map(({ id, d, label }) => (
+        {PATHS.map(({ id, d }) => (
           <g key={id}>
             {/* Ghost trace — shows full path faintly */}
             <path
               d={d}
               fill="none"
-              stroke="#201e1d"
+              stroke="var(--color-ink)"
               strokeWidth="1"
               strokeOpacity="0.07"
             />
@@ -111,7 +111,7 @@ export default function SystemBlueprint() {
               data-bp-path
               d={d}
               fill="none"
-              stroke="#ec3013"
+              stroke="var(--color-red)"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -122,7 +122,7 @@ export default function SystemBlueprint() {
         {/* Arrow markers */}
         <defs>
           <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 L1.5,3 Z" fill="#ec3013" />
+            <path d="M0,0 L6,3 L0,6 L1.5,3 Z" fill="var(--color-red)" />
           </marker>
         </defs>
 
@@ -132,8 +132,8 @@ export default function SystemBlueprint() {
             <rect
               width={w}
               height={h}
-              fill="#f3f2f2"
-              stroke="#201e1d"
+              fill="var(--color-bg)"
+              stroke="var(--color-ink)"
               strokeWidth="1.5"
               strokeOpacity="0.5"
               rx="0"
@@ -146,7 +146,7 @@ export default function SystemBlueprint() {
               fontSize={mono ? '10' : '11'}
               fontFamily={mono ? 'JetBrains Mono, monospace' : 'Archivo, sans-serif'}
               fontWeight={mono ? '400' : '700'}
-              fill="#201e1d"
+              fill="var(--color-ink)"
             >
               {label}
             </text>

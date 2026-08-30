@@ -26,6 +26,15 @@ interface ActionGroup {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+const NAV_CHORDS: Record<string, string> = {
+  h: '#hero',
+  p: '#projects',
+  e: '#experience',
+  l: '#learning',
+  a: '#about',
+  c: '#contact',
+}
+
 function scrollTo(id: string) {
   document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 }
@@ -101,6 +110,8 @@ function PaletteModal({ onClose }: { onClose: () => void }) {
   const [selectedIdx, setSelectedIdx] = useState(0)
   const [toastMsg, setToastMsg] = useState('')
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const navChordPending = useRef(false)
+  const navChordTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   // Build actions once — settings label changes on re-open which is fine
   const actions = useMemo(() => buildActions(onClose), [onClose])
@@ -145,6 +156,35 @@ function PaletteModal({ onClose }: { onClose: () => void }) {
 
   // Keyboard navigation
   const handleKey = useCallback((e: React.KeyboardEvent) => {
+    if (!query.trim() && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      const key = e.key.toLowerCase()
+
+      if (key === 'g') {
+        navChordPending.current = true
+        clearTimeout(navChordTimer.current)
+        navChordTimer.current = setTimeout(() => {
+          navChordPending.current = false
+        }, 600)
+        e.preventDefault()
+        return
+      }
+
+      if (navChordPending.current && key !== 'g' && !NAV_CHORDS[key]) {
+        navChordPending.current = false
+        clearTimeout(navChordTimer.current)
+      }
+
+      if (navChordPending.current && NAV_CHORDS[key]) {
+        e.preventDefault()
+        navChordPending.current = false
+        clearTimeout(navChordTimer.current)
+        playBass(0.05)
+        scrollTo(NAV_CHORDS[key])
+        onClose()
+        return
+      }
+    }
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault()
@@ -168,7 +208,7 @@ function PaletteModal({ onClose }: { onClose: () => void }) {
         animateClose()
         break
     }
-  }, [flatItems, selectedIdx, animateClose])
+  }, [flatItems, selectedIdx, animateClose, query, onClose])
 
   // Copy toast
   useEffect(() => {
@@ -371,6 +411,49 @@ export default function CommandPalette() {
     window.addEventListener('open-cmdpalette', handler)
     return () => window.removeEventListener('open-cmdpalette', handler)
   }, [openPalette])
+
+  // Global navigation chords: G then H/P/E/L/A/C (only when palette is closed)
+  useEffect(() => {
+    let chordActive = false
+    let chordTimer: ReturnType<typeof setTimeout>
+
+    const isTypingTarget = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) return false
+      const tag = target.tagName
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable
+    }
+
+    const handler = (e: KeyboardEvent) => {
+      if (open || isTypingTarget(e.target)) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+
+      const key = e.key.toLowerCase()
+
+      if (key === 'g') {
+        chordActive = true
+        clearTimeout(chordTimer)
+        chordTimer = setTimeout(() => { chordActive = false }, 900)
+        return
+      }
+
+      if (chordActive) {
+        const target = NAV_CHORDS[key]
+        if (target) {
+          e.preventDefault()
+          chordActive = false
+          clearTimeout(chordTimer)
+          scrollTo(target)
+          playSnap(0.06)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handler)
+    return () => {
+      window.removeEventListener('keydown', handler)
+      clearTimeout(chordTimer)
+    }
+  }, [open])
 
   if (!mounted) return null
 

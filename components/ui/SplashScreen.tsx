@@ -8,6 +8,7 @@ export default function SplashScreen() {
   const counterRef = useRef<HTMLSpanElement>(null)
   const barRef     = useRef<HTMLDivElement>(null)
   const nameRef    = useRef<HTMLSpanElement>(null)
+  const dismissRef = useRef<(() => void) | null>(null)
   const [show, setShow]       = useState(false)
   const [exiting, setExiting] = useState(false)
 
@@ -52,6 +53,8 @@ export default function SplashScreen() {
       })
     }
 
+    dismissRef.current = dismiss
+
     gsap.set(nameEl, { opacity: 0, y: 10 })
 
     function tick(now: number) {
@@ -86,6 +89,7 @@ export default function SplashScreen() {
     }, 80)
 
     return () => {
+      dismissRef.current = null
       clearTimeout(safety)
       clearTimeout(startDelay)
       cancelAnimationFrame(raf)
@@ -97,20 +101,31 @@ export default function SplashScreen() {
   return (
     <div
       ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Portfolio loading"
       className="fixed inset-0 z-[120] bg-ink flex flex-col items-center justify-center
                  select-none"
       style={{ pointerEvents: exiting ? 'none' : 'all' }}
-      aria-hidden="true"
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') dismissRef.current?.()
+      }}
     >
       {/* Corner labels */}
       <span className="absolute top-6 left-[clamp(24px,5vw,72px)]
                        font-mono text-[11px] tracking-[0.1em] uppercase text-n700">
         Portfolio — 2026
       </span>
-      <span className="absolute top-6 right-[clamp(24px,5vw,72px)]
-                       font-mono text-[11px] tracking-[0.1em] uppercase text-n700">
-        Loading
-      </span>
+      <button
+        type="button"
+        onClick={() => dismissRef.current?.()}
+        className="absolute top-6 right-[clamp(24px,5vw,72px)]
+                   font-mono text-[11px] tracking-[0.1em] uppercase text-n700
+                   hover:text-bg transition-colors duration-200"
+        aria-label="Skip loading animation"
+      >
+        Skip →
+      </button>
 
       {/* Giant counter — variable font gets bolder as it counts */}
       <span

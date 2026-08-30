@@ -113,7 +113,7 @@ export default function CRAGBlueprint() {
             key={`ghost-${id}`}
             d={d}
             fill="none"
-            stroke="#201e1d"
+            stroke="var(--color-ink)"
             strokeWidth="1"
             strokeOpacity="0.07"
           />
@@ -126,7 +126,7 @@ export default function CRAGBlueprint() {
             data-crag-path
             d={d}
             fill="none"
-            stroke="#ec3013"
+            stroke="var(--color-red)"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -143,7 +143,7 @@ export default function CRAGBlueprint() {
               y={pos.y}
               fontSize="9"
               fontFamily="JetBrains Mono, monospace"
-              fill="#7c7977"
+              fill="var(--color-n600)"
               textAnchor="middle"
             >
               {label}
@@ -157,8 +157,8 @@ export default function CRAGBlueprint() {
             <rect
               width={w}
               height={h}
-              fill="#f3f2f2"
-              stroke="#201e1d"
+              fill="var(--color-bg)"
+              stroke="var(--color-ink)"
               strokeWidth="1.5"
               strokeOpacity="0.5"
             />
@@ -170,7 +170,7 @@ export default function CRAGBlueprint() {
               fontSize={mono ? '10' : '11'}
               fontFamily={mono ? 'JetBrains Mono, monospace' : 'Archivo, sans-serif'}
               fontWeight={mono ? '500' : '700'}
-              fill="#201e1d"
+              fill="var(--color-ink)"
             >
               {label}
             </text>

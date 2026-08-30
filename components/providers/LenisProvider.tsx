@@ -35,9 +35,10 @@ export default function LenisProvider({ children }: LenisProviderProps) {
     lenisRef.current = lenis
 
     // Sync Lenis RAF with GSAP ticker for seamless animation coupling
-    gsap.ticker.add((time) => {
+    const onTick = (time: number) => {
       lenis.raf(time * 1000)
-    })
+    }
+    gsap.ticker.add(onTick)
     gsap.ticker.lagSmoothing(0)
 
     // Velocity-based inertial skew + write to shared velocity store
@@ -74,7 +75,7 @@ export default function LenisProvider({ children }: LenisProviderProps) {
     })
 
     return () => {
-      gsap.ticker.remove((time) => lenis.raf(time * 1000))
+      gsap.ticker.remove(onTick)
       lenis.destroy()
       sectionCleanup.forEach((fn) => fn())
       lenisRef.current = null

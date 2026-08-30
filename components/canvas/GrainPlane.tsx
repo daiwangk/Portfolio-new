@@ -55,7 +55,7 @@ void main() {
 `
 
 function GrainPlane({ mouseRef }: { mouseRef: RefObject<{ nx: number; ny: number }> }) {
-  const matRef = useRef<THREE.ShaderMaterial>(null)
+  const meshRef = useRef<THREE.Mesh>(null)
   const { viewport } = useThree()
 
   const uniforms = useMemo(() => ({
@@ -64,10 +64,12 @@ function GrainPlane({ mouseRef }: { mouseRef: RefObject<{ nx: number; ny: number
   }), [])
 
   useFrame(({ clock }) => {
-    if (!matRef.current) return
-    matRef.current.uniforms.uTime.value = clock.elapsedTime
+    const material = meshRef.current?.material
+    if (!(material instanceof THREE.ShaderMaterial)) return
+
+    material.uniforms.uTime.value = clock.elapsedTime
     if (mouseRef.current) {
-      matRef.current.uniforms.uMouse.value.set(
+      material.uniforms.uMouse.value.set(
         mouseRef.current.nx,
         mouseRef.current.ny,
       )
@@ -75,17 +77,24 @@ function GrainPlane({ mouseRef }: { mouseRef: RefObject<{ nx: number; ny: number
   })
 
   useEffect(() => {
+    const mesh = meshRef.current
+    if (!mesh) return
+
+    const geometry = mesh.geometry
+    const material = mesh.material
+
     return () => {
-      // Explicit disposal on unmount
-      if (matRef.current) matRef.current.dispose()
+      geometry.dispose()
+      if (material instanceof THREE.Material) {
+        material.dispose()
+      }
     }
   }, [])
 
   return (
-    <mesh>
+    <mesh ref={meshRef}>
       <planeGeometry args={[viewport.width, viewport.height]} />
       <shaderMaterial
-        ref={matRef}
         vertexShader={VERT}
         fragmentShader={FRAG}
         uniforms={uniforms}
