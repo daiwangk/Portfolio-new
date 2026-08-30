@@ -132,22 +132,15 @@ a:hover {
   to   { opacity: 0; }
 }
 
-@keyframes vt-slide-from-right {
-  from { transform: translateX(12%); }
-  to   { transform: translateX(0); }
-}
-
-@keyframes vt-slide-to-left {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-12%); }
-}
-
-/* Default page-level transitions */
+/* Default page-level transitions — clean cross-fade, no directional slide.
+   Slides caused a shake on backward navigation (same slide direction
+   for both forward and back conflicted with the title morph transform). */
 ::view-transition-old(root) {
-  animation: 0.35s ease both vt-fade-out, 0.35s ease both vt-slide-to-left;
+  animation: 0.28s ease both vt-fade-out;
 }
 ::view-transition-new(root) {
-  animation: 0.35s ease both vt-fade-in, 0.35s ease both vt-slide-from-right;
+  animation: 0.28s ease both vt-fade-in;
+  animation-delay: 0.1s;
 }
 
 /* Shared element morphing for the case study (project 02 → hero) */
