@@ -26,15 +26,15 @@ export default function CustomCursor() {
 
     document.documentElement.style.cursor = 'none'
 
-    // Step 4 fix: start off-screen but at opacity 0 — no multi-second delay.
-    // The ring becomes visible on the FIRST mousemove event, within one frame.
+    // Do not put opacity/transform in React style — parent re-renders overwrite GSAP.
     let rx = -300
     let ry = -300
     let hasSeenMouse = false
 
+    gsap.set(ring, { opacity: 0, x: rx, y: ry, xPercent: -50, yPercent: -50 })
+
     const onMove = (e: MouseEvent) => {
       if (!hasSeenMouse) {
-        // First move: snap to cursor instantly, no lerp lag
         hasSeenMouse = true
         rx = e.clientX
         ry = e.clientY
@@ -48,7 +48,7 @@ export default function CustomCursor() {
 
     const tick = () => {
       if (!hasSeenMouse) return
-      gsap.set(ring, { x: rx, y: ry })
+      gsap.set(ring, { x: rx, y: ry, opacity: 1 })
     }
     gsap.ticker.add(tick)
 
@@ -77,6 +77,7 @@ export default function CustomCursor() {
     <div
       ref={ringRef}
       aria-hidden="true"
+      data-custom-cursor=""
       className="fixed top-0 left-0 pointer-events-none z-[200]"
       style={{
         width: SIZE,
@@ -84,9 +85,7 @@ export default function CustomCursor() {
         borderRadius: '50%',
         background: 'white',
         mixBlendMode: 'difference',
-        transform: 'translate(-50%, -50%)',
         willChange: 'transform',
-        opacity: 0,
       }}
     />
   )

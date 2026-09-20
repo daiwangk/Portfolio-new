@@ -56,9 +56,12 @@ export default function MagneticButton({
   }
 
   const variantClass = {
-    primary:       'bg-red text-bg border-red hover:bg-red-700 hover:border-red-700 hover:text-bg',
-    ghost:         'bg-transparent text-ink border-ink hover:bg-ink hover:text-bg',
-    'ghost-on-red':'bg-transparent text-bg border-bg hover:bg-bg hover:text-ink',
+    primary: 'bg-red text-bg border-red hover:bg-red-700 hover:border-red-700 hover:text-bg',
+    ghost: 'bg-transparent text-ink border-ink hover:bg-ink hover:text-bg',
+    // Explicit light fill + dark text so hover never matches the red section bg
+    // (theme token hover:bg-bg/hover:text-ink can collide with mix-blend cursor + dark mode).
+    'ghost-on-red':
+      'bg-transparent text-white border-white hover:bg-white hover:text-[#201e1d] hover:border-white',
   }[variant]
 
   const baseClass = `inline-flex items-center gap-2.5 px-5 py-3 font-sans font-bold text-[15px] border-2 cursor-pointer no-underline transition-colors duration-150 select-none ${variantClass} ${className}`

@@ -19,7 +19,7 @@ const ITEMS_B = [
   'Ship fast', '·', 'No hallucination', '·', 'Grounded answers', '·',
   'Cited responses', '·', 'Local embeddings', '·', 'Ragas evaluation', '·',
   'Persistent storage', '·', 'Async APIs', '·', 'Type-safe', '·',
-  'Mobile-first', '·', 'Open to work', '·', 'Gurgaon, India', '·',
+  'Mobile-first', '·', 'AI Engineer @ Engineo', '·', 'Gurgaon, India', '·',
   '120fps target', '·', 'Zero FOUC', '·',
 ]
 

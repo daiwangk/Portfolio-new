@@ -70,7 +70,7 @@ export default function Contact() {
                      text-[clamp(40px,5vw,64px)]"
         >
           <span data-line className="block" style={{ clipPath: clipHidden }}>
-            Open to work from May 2026.
+            Currently working at Engineo Solutions as AI Engineer since May 2026.
           </span>
           <span data-line className="block" style={{ clipPath: clipHidden }}>
             Let&apos;s build something that ships.

@@ -1,241 +1,231 @@
 'use client'
 
 /**
- * CursorCompanion — pixel-art bird that follows the cursor
- * using oneko.js's actual tick-based state-machine behavior.
+ * CursorCompanion — classic oneko.js cat that follows the cursor.
  *
- * Movement logic adapted from:
+ * Movement + sprite sheet logic adapted from:
  *   https://github.com/adryd325/oneko.js (MIT License)
  *   Credit: adryd325 and contributors
  *
- * Visual: custom pixel-art SVG bird (cream body, orange accents)
- * — preserves the exact art from the previous implementation.
+ * Sprite: /oneko.gif (32×32 frames in a spritesheet)
  */
 
-'use client'
-
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import gsap from 'gsap'
-import BirdSprite, { type BirdSpriteRefs } from '@/components/cursor/BirdSprite'
+import { useEffect, useRef, useState } from 'react'
+import { CURSOR_COMPANION_ENABLED } from '@/lib/cursorCompanion'
 import { canUseCustomCursor } from '@/lib/cursorGuards'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
-// ─── oneko.js constants (exact values from source) ────────────────────────────
-const NEKO_SPEED = 10          // px per tick — exactly as in oneko.js
-const IDLE_NEAR  = 48          // distance threshold to enter idle
-const TICK_MS    = 100         // gate: one logic tick per 100ms (oneko.js line 166)
-const ALERT_HOLD = 7           // frames to show alert sprite before walking (line 256)
+const NEKO_SPEED = 10
+const IDLE_NEAR = 48
+const TICK_MS = 100
+const SIZE = 32
 
-// ─── Idle animation durations (oneko.js frame counts) ─────────────────────────
-const SLEEP_START_FRAME  = 8   // frames showing "tired" before "sleeping" (line 213)
-const SLEEP_END_FRAME    = 192 // total frames for sleeping animation (line 218)
-const SCRATCH_END_FRAME  = 9   // frames for scratch animations (line 228)
-const IDLE_TRIGGER_MIN   = 10  // idleTime must exceed this before picking animation (line 188)
-const IDLE_TRIGGER_PROB  = 200 // 1-in-200 chance per tick of picking animation (line 189)
+type SpriteName =
+  | 'idle'
+  | 'alert'
+  | 'scratchSelf'
+  | 'scratchWallN'
+  | 'scratchWallS'
+  | 'scratchWallE'
+  | 'scratchWallW'
+  | 'tired'
+  | 'sleeping'
+  | 'N'
+  | 'NE'
+  | 'E'
+  | 'SE'
+  | 'S'
+  | 'SW'
+  | 'W'
+  | 'NW'
 
-// ─── Visual constants ──────────────────────────────────────────────────────────
-const DISPLAY = 32             // size of the bird div (px)
-const PIXELATED: CSSProperties = {
-  width: DISPLAY,
-  height: DISPLAY,
-  imageRendering: 'pixelated',
+const SPRITE_SETS: Record<SpriteName, [number, number][]> = {
+  idle: [[-3, -3]],
+  alert: [[-7, -3]],
+  scratchSelf: [
+    [-5, 0],
+    [-6, 0],
+    [-7, 0],
+  ],
+  scratchWallN: [
+    [0, 0],
+    [0, -1],
+  ],
+  scratchWallS: [
+    [-7, -1],
+    [-6, -2],
+  ],
+  scratchWallE: [
+    [-2, -2],
+    [-2, -3],
+  ],
+  scratchWallW: [
+    [-4, 0],
+    [-4, -1],
+  ],
+  tired: [[-3, -2]],
+  sleeping: [
+    [-2, 0],
+    [-2, -1],
+  ],
+  N: [
+    [-1, -2],
+    [-1, -3],
+  ],
+  NE: [
+    [0, -2],
+    [0, -3],
+  ],
+  E: [
+    [-3, 0],
+    [-3, -1],
+  ],
+  SE: [
+    [-5, -1],
+    [-5, -2],
+  ],
+  S: [
+    [-6, -3],
+    [-7, -2],
+  ],
+  SW: [
+    [-5, -3],
+    [-6, -1],
+  ],
+  W: [
+    [-4, -2],
+    [-4, -3],
+  ],
+  NW: [
+    [-1, 0],
+    [-1, -1],
+  ],
 }
 
-// ─── State types ──────────────────────────────────────────────────────────────
-type IdleAnim = 'sleeping' | 'scratchSelf' | null
-
 export default function CursorCompanion() {
-  const rootRef   = useRef<HTMLDivElement>(null)
-  const wrapRef   = useRef<HTMLDivElement>(null)
-  const spriteRefs = useRef<BirdSpriteRefs>({ wingL: null, wingR: null, body: null, eye: null })
-  const reduced   = useReducedMotion()
+  const rootRef = useRef<HTMLDivElement>(null)
+  const reduced = useReducedMotion()
   const [eligible, setEligible] = useState(false)
 
   useEffect(() => {
-    setEligible(canUseCustomCursor(reduced))
+    setEligible(CURSOR_COMPANION_ENABLED && canUseCustomCursor(reduced))
   }, [reduced])
 
   useEffect(() => {
     if (!eligible) return
-    const root = rootRef.current
-    const wrap = wrapRef.current
-    if (!root || !wrap) return
+    const el = rootRef.current
+    if (!el) return
 
-    // ── State variables (mirrors oneko.js) ─────────────────────────────────
     let mousePosX = 0
     let mousePosY = 0
-    let nekoPosX  = -300        // off-screen until first mouse move
-    let nekoPosY  = -300
-    let hasMoved  = false
+    let nekoPosX = 32
+    let nekoPosY = 32
+    let hasMoved = false
 
-    let frameCount         = 0
-    let idleTime           = 0
-    let idleAnimation: IdleAnim = null
+    let frameCount = 0
+    let idleTime = 0
+    let idleAnimation: string | null = null
     let idleAnimationFrame = 0
+    let lastFrameTimestamp = 0
+    let rafId = 0
 
-    // ── Visual helpers ─────────────────────────────────────────────────────
-    let isShowingIdle  = false
-    let bobTween: gsap.core.Tween | null = null
-
-    const applyFacing = (dir: number) => {
-      gsap.set(wrap, { scaleX: dir })
+    const setSprite = (name: SpriteName, frame: number) => {
+      const frames = SPRITE_SETS[name]
+      const sprite = frames[frame % frames.length]
+      el.style.backgroundPosition = `${sprite[0] * SIZE}px ${sprite[1] * SIZE}px`
     }
 
-    const showWalkFrame = (fc: number) => {
-      if (isShowingIdle) exitIdleVisual()
-      // Wing flap every 3 frames, alternating up/down — gives the hop feel
-      const { wingL, wingR } = spriteRefs.current
-      const flapPhase = Math.floor(fc / 3) % 2
-      if (wingL) gsap.set(wingL, { rotation: flapPhase === 0 ? -10 : 8 })
-      if (wingR) gsap.set(wingR, { rotation: flapPhase === 0 ? 10 : -8 })
+    const place = () => {
+      // left/top (not transform) — avoids fighting React style re-renders
+      el.style.left = `${nekoPosX - 16}px`
+      el.style.top = `${nekoPosY - 16}px`
+      el.style.opacity = '1'
     }
 
-    const showIdleSprite = () => {
-      if (isShowingIdle) return
-      isShowingIdle = true
-      const { wingL, wingR } = spriteRefs.current
-      gsap.to(wrap, { scaleY: 0.88, opacity: 0.6, duration: 0.4, ease: 'power2.out' })
-      if (wingL) gsap.to(wingL, { rotation: -14, duration: 0.4, ease: 'power2.out' })
-      if (wingR) gsap.to(wingR, { rotation: 14, duration: 0.4, ease: 'power2.out' })
-      bobTween?.kill()
-      bobTween = gsap.to(wrap, { y: 2, duration: 1.1, yoyo: true, repeat: -1, ease: 'sine.inOut' })
+    const resetIdleAnimation = () => {
+      idleAnimation = null
+      idleAnimationFrame = 0
     }
 
-    const showSleepSprite = () => {
-      // Deeper settle: squish + very slow bob
-      const { eye } = spriteRefs.current
-      if (eye) gsap.to(eye, { opacity: 0, duration: 0.4 })
-      gsap.to(wrap, { scaleY: 0.72, opacity: 0.45, duration: 0.8, ease: 'power2.out' })
-      bobTween?.kill()
-      bobTween = gsap.to(wrap, { y: 3, duration: 2.2, yoyo: true, repeat: -1, ease: 'sine.inOut' })
-    }
-
-    const showAlertSprite = () => {
-      // Brief upright snap before walking
-      const { wingL, wingR, eye } = spriteRefs.current
-      exitIdleVisual()
-      gsap.to(wrap, { scaleY: 1.08, duration: 0.1, yoyo: true, repeat: 1 })
-      if (eye) gsap.to(eye, { opacity: 1, duration: 0.1 })
-      if (wingL) gsap.set(wingL, { rotation: 0 })
-      if (wingR) gsap.set(wingR, { rotation: 0 })
-    }
-
-    const exitIdleVisual = () => {
-      isShowingIdle = false
-      bobTween?.kill()
-      bobTween = null
-      const { wingL, wingR, eye } = spriteRefs.current
-      gsap.to(wrap, { scaleY: 1, opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' })
-      if (wingL) gsap.set(wingL, { rotation: 0 })
-      if (wingR) gsap.set(wingR, { rotation: 0 })
-      if (eye) gsap.to(eye, { opacity: 1, duration: 0.2 })
-    }
-
-    // Click flap — GSAP one-off (kept from previous version)
-    const onClickFlap = () => {
-      const { wingL, wingR } = spriteRefs.current
-      gsap.fromTo(wrap, { scaleY: 1.15 }, { scaleY: 1, duration: 0.35, ease: 'elastic.out(1, 0.55)' })
-      if (wingL) gsap.fromTo(wingL, { rotation: -24 }, { rotation: 0, duration: 0.22, ease: 'power2.out' })
-      if (wingR) gsap.fromTo(wingR, { rotation: 24 }, { rotation: 0, duration: 0.22, ease: 'power2.out' })
-    }
-
-    // ── oneko.js idle() — exact logic ──────────────────────────────────────
     const idle = () => {
       idleTime += 1
 
-      // Randomly pick an idle animation (oneko.js lines 187-209)
-      if (idleTime > IDLE_TRIGGER_MIN &&
-          Math.floor(Math.random() * IDLE_TRIGGER_PROB) === 0 &&
-          idleAnimation === null) {
-        // Only using animations that work with our 2D bird (no wall-specific ones)
-        idleAnimation = Math.random() < 0.5 ? 'sleeping' : 'scratchSelf'
+      if (
+        idleTime > 10 &&
+        Math.floor(Math.random() * 200) === 0 &&
+        idleAnimation === null
+      ) {
+        const available: string[] = ['sleeping', 'scratchSelf']
+        if (nekoPosX < 32) available.push('scratchWallW')
+        if (nekoPosY < 32) available.push('scratchWallN')
+        if (nekoPosX > window.innerWidth - 32) available.push('scratchWallE')
+        if (nekoPosY > window.innerHeight - 32) available.push('scratchWallS')
+        idleAnimation = available[Math.floor(Math.random() * available.length)]
       }
 
       switch (idleAnimation) {
         case 'sleeping':
-          if (idleAnimationFrame < SLEEP_START_FRAME) {
-            // "tired" phase
-            showIdleSprite()
+          if (idleAnimationFrame < 8) {
+            setSprite('tired', 0)
           } else {
-            // "sleeping" phase — deeper animation
-            if (idleAnimationFrame === SLEEP_START_FRAME) showSleepSprite()
-            if (idleAnimationFrame > SLEEP_END_FRAME) {
-              idleAnimation = null
-              idleAnimationFrame = 0
-            }
+            setSprite('sleeping', Math.floor(idleAnimationFrame / 4))
+            if (idleAnimationFrame > 192) resetIdleAnimation()
           }
           idleAnimationFrame += 1
           break
-
+        case 'scratchWallN':
+        case 'scratchWallS':
+        case 'scratchWallE':
+        case 'scratchWallW':
         case 'scratchSelf':
-          // Quick scratch: wing alternation for 9 frames then reset
-          showIdleSprite()
-          const { wingL, wingR } = spriteRefs.current
-          const phase = idleAnimationFrame % 3
-          if (wingL) gsap.set(wingL, { rotation: phase === 0 ? -20 : phase === 1 ? 5 : -20 })
-          if (wingR) gsap.set(wingR, { rotation: 14 })
+          setSprite(idleAnimation as SpriteName, idleAnimationFrame)
           idleAnimationFrame += 1
-          if (idleAnimationFrame > SCRATCH_END_FRAME) {
-            idleAnimation = null
-            idleAnimationFrame = 0
-          }
+          if (idleAnimationFrame > 9) resetIdleAnimation()
           break
-
         default:
-          // Plain idle — wing-folded settle
-          showIdleSprite()
+          setSprite('idle', 0)
+          return
       }
     }
 
-    // ── oneko.js frame() — exact logic ────────────────────────────────────
     const frame = () => {
       frameCount += 1
       const diffX = nekoPosX - mousePosX
       const diffY = nekoPosY - mousePosY
       const distance = Math.sqrt(diffX ** 2 + diffY ** 2)
 
-      // Idle threshold (oneko.js line 245)
       if (distance < NEKO_SPEED || distance < IDLE_NEAR) {
         idle()
         return
       }
 
-      // Reset idle state when cursor is far enough
       idleAnimation = null
       idleAnimationFrame = 0
 
-      // Alert phase: brief pause before chasing (oneko.js lines 253-258)
       if (idleTime > 1) {
-        showAlertSprite()
-        idleTime = Math.min(idleTime, ALERT_HOLD)
+        setSprite('alert', 0)
+        idleTime = Math.min(idleTime, 7)
         idleTime -= 1
         return
       }
 
-      // ── Walking ──────────────────────────────────────────────────────────
-      // Direction for horizontal flip (oneko.js uses 8-way; we use L/R flip)
-      if (diffX > 0.5) applyFacing(-1)       // moving left
-      else if (diffX < -0.5) applyFacing(1)  // moving right
+      let direction = ''
+      direction += diffY / distance > 0.5 ? 'N' : ''
+      direction += diffY / distance < -0.5 ? 'S' : ''
+      direction += diffX / distance > 0.5 ? 'W' : ''
+      direction += diffX / distance < -0.5 ? 'E' : ''
+      if (direction) setSprite(direction as SpriteName, frameCount)
+      else setSprite('idle', 0)
 
-      showWalkFrame(frameCount)
-
-      // Move exactly NEKO_SPEED px toward cursor (oneko.js lines 268-275)
       nekoPosX -= (diffX / distance) * NEKO_SPEED
       nekoPosY -= (diffY / distance) * NEKO_SPEED
-
-      // Clamp to viewport (oneko.js lines 271-272)
       nekoPosX = Math.min(Math.max(16, nekoPosX), window.innerWidth - 16)
       nekoPosY = Math.min(Math.max(16, nekoPosY), window.innerHeight - 16)
-
-      // Direct position update — like oneko.js's style.left/top, but via transform
-      gsap.set(root, { x: nekoPosX, y: nekoPosY })
+      place()
     }
 
-    // ── rAF loop with 100ms gate — exact oneko.js pattern ─────────────────
-    let lastFrameTimestamp = 0
-    let rafId = 0
-
     const onAnimationFrame = (timestamp: number) => {
+      if (!el.isConnected) return
       if (!lastFrameTimestamp) lastFrameTimestamp = timestamp
       if (timestamp - lastFrameTimestamp > TICK_MS) {
         lastFrameTimestamp = timestamp
@@ -244,33 +234,30 @@ export default function CursorCompanion() {
       rafId = requestAnimationFrame(onAnimationFrame)
     }
 
-    // ── Mouse listener ─────────────────────────────────────────────────────
     const onMove = (e: MouseEvent) => {
       mousePosX = e.clientX
       mousePosY = e.clientY
-
       if (!hasMoved) {
         hasMoved = true
-        // Spawn near cursor on first move
-        nekoPosX = mousePosX + 40
-        nekoPosY = mousePosY + 20
-        gsap.set(root, { x: nekoPosX, y: nekoPosY, opacity: 1 })
+        // Spawn near cursor so the cat is immediately visible, then chase
+        nekoPosX = Math.min(Math.max(16, mousePosX + 48), window.innerWidth - 16)
+        nekoPosY = Math.min(Math.max(16, mousePosY + 48), window.innerHeight - 16)
+        setSprite('alert', 0)
+        place()
       }
     }
 
-    // ── Mount ──────────────────────────────────────────────────────────────
-    gsap.set(root, { opacity: 0, x: -300, y: -300 })
-    gsap.set(wrap, { scaleX: 1, scaleY: 1, y: 0 })
+    el.style.opacity = '0'
+    el.style.left = '-64px'
+    el.style.top = '-64px'
+    setSprite('idle', 0)
 
-    window.addEventListener('mousemove', onMove)
-    document.addEventListener('click', onClickFlap)
+    document.addEventListener('mousemove', onMove)
     rafId = requestAnimationFrame(onAnimationFrame)
 
     return () => {
       cancelAnimationFrame(rafId)
-      window.removeEventListener('mousemove', onMove)
-      document.removeEventListener('click', onClickFlap)
-      bobTween?.kill()
+      document.removeEventListener('mousemove', onMove)
     }
   }, [eligible])
 
@@ -279,37 +266,18 @@ export default function CursorCompanion() {
   return (
     <div
       ref={rootRef}
+      id="oneko"
       aria-hidden="true"
-      className="fixed top-0 left-0 pointer-events-none z-[201]"
+      data-cursor-companion=""
+      className="fixed pointer-events-none z-[201]"
       style={{
-        width: DISPLAY,
-        height: DISPLAY,
-        willChange: 'transform',
-        opacity: 0,
-        // Use translate(-50%,-50%) so nekoPosX/Y is the center point
-        transform: 'translate(-50%, -50%)',
+        width: SIZE,
+        height: SIZE,
+        imageRendering: 'pixelated',
+        backgroundImage: 'url(/oneko.gif)',
+        backgroundRepeat: 'no-repeat',
+        // opacity/left/top owned by the effect — React must not reset them
       }}
-    >
-      {/* Glow layer — existing bird art visual */}
-      <div
-        className="absolute inset-0 flex items-center justify-center"
-        style={{
-          filter: 'blur(4px) brightness(1.4)',
-          opacity: 0.45,
-          transform: 'scale(1.2)',
-        }}
-      >
-        <BirdSprite style={PIXELATED} />
-      </div>
-
-      {/* Main bird — wrapRef is what gets scaleX/scaleY/y animated */}
-      <div
-        ref={wrapRef}
-        className="relative w-full h-full"
-        style={{ transformOrigin: '50% 50%' }}
-      >
-        <BirdSprite spriteRefs={spriteRefs} style={PIXELATED} />
-      </div>
-    </div>
+    />
   )
 }

@@ -158,7 +158,8 @@ export default function Hero() {
         <CopyEmailButton
           label="daiwangk@gmail.com"
           className="inline-flex items-center gap-2.5 px-5 py-3 font-sans font-bold
-                     text-[15px] border-2 border-ink text-ink hover:bg-ink hover:text-bg
+                     text-[15px] border-2 border-ink text-ink
+                     hover:bg-ink hover:text-[var(--color-bg)]
                      transition-colors duration-150"
         />
       </div>
@@ -171,7 +172,7 @@ export default function Hero() {
         <span className="flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 bg-red animate-blink rounded-none" />
           <span className="font-mono text-[12px] tracking-[0.06em] uppercase text-red-700 bg-red/10 px-2.5 py-1">
-            Open to work — May 2026
+            Currently working at Engineo Solutions as AI Engineer since May 2026
           </span>
         </span>
 
